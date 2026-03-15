@@ -1,12 +1,12 @@
-# vesper
+# 🌆 vesper
 
-🌆 Evening/final synthesis and reporting system. Generates comprehensive summaries and insights.
+Evening/final synthesis and reporting system. Generates comprehensive summaries and insights.
 
 ---
 
 ## 📖 Overview
 
-Uvesper handles core responsibilities in the Indigo system. See SKILL.md for operational details.
+Vesper synthesizes and reports findings. Generates comprehensive summaries, reports, and actionable insights from research and operations.
 
 ---
 
@@ -14,20 +14,33 @@ Uvesper handles core responsibilities in the Indigo system. See SKILL.md for ope
 
 ### 📦 Installation
 
-Clone into your skill management system:
 ```bash
 git clone https://github.com/indigokarasu/vesper.git
 ```
 
-### 🛠️ Configuration
+### 🛠️ Tool Surface
 
-Read `SKILL.md` for:
-- ⚙️ Operational behavior
-- 🔗 Skill cooperation
-- 📋 Tool surface
-- 🔒 Privacy and data handling
+```
+vesper.synthesize(data, ...)         🔄 Synthesize findings
+vesper.generate_report(topic, ...)   📄 Generate comprehensive report
+vesper.extract_insights(...)         💡 Extract actionable insights
+vesper.create_summary(...)           📝 Create executive summary
+vesper.format_output(format, ...)    📤 Format for delivery
+```
 
-Read `references/` for detailed schemas, heuristics, and examples.
+### 📤 Output
+
+- **vesper_synthesis** — Synthesized findings and analysis
+- **vesper_report** — Formatted comprehensive report
+- **vesper_insights** — Actionable insights and recommendations
+
+---
+
+## ⚙️ Configuration
+
+Read `SKILL.md` for operational details, synthesis methods, and cooperation with other skills.
+
+Read `references/` for schemas and examples.
 
 ---
 
