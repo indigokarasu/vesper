@@ -1,32 +1,43 @@
-# 🌆 vesper
+# 🌆 Vesper
 
-Daily briefing generator. Aggregates signals into concise morning and evening briefings. Surfaces outcomes and opportunities in natural language.
+Vesper generates personalized briefings at configurable times (morning/evening). It aggregates signals from multiple systems—outcomes, opportunities, recommendations, briefings—filters for relevance, and synthesizes concise, actionable natural language summaries. Vesper excludes routine activity and speculative reasoning, surfacing only what's decision-relevant.
 
 ---
 
 ## 📖 Overview
 
-Vesper is a core component of the Indigo system. See SKILL.md for operational details.
+Daily briefing generator. Aggregates signals into concise morning and evening briefings. Surfaces outcomes and opportunities in natural language.
 
 ---
 
-## 🚀 Quick Start
+## 🔧 Tool Surface
 
-### 📦 Installation
+- `vesper.briefing.generate` — generate briefing for specified time
+- `vesper.signals.ingest` — ingest signal (outcome, opportunity, etc.) for briefing
+- `vesper.schedule.set` — configure briefing times
+- `vesper.filters.configure` — set signal filtering and relevance rules
+- `vesper.briefing.history` — past briefings with signal composition
+- `vesper.status` — next briefing time, pending signals, filter configuration
 
-```bash
-git clone https://github.com/indigokarasu/vesper.git
-```
+---
 
-### 🛠️ Configuration
+## 📊 Output & Journals
 
-Read `SKILL.md` for:
-- ⚙️ Operational behavior
-- 🔗 Skill cooperation
-- 📋 Tool surface
-- 🔒 Privacy and data handling
+Produces: Produces briefing records with signal composition, filtering decisions, and synthesis outputs.
 
-Read `references/` for detailed schemas, heuristics, and examples.
+---
+
+## ⏱️ Heartbeat & Background Tasks
+
+**Scheduled Briefing Generation**: Vesper runs at configured times to generate briefings. Background signal filtering runs continuously to surface relevant signals.
+
+---
+
+## 📚 Documentation
+
+Read `SKILL.md` for operational details, schemas, and validation rules.
+
+See `references/` for detailed specifications and examples.
 
 ---
 
