@@ -1,12 +1,12 @@
-# 🌆 vesper
+# vesper
 
-Evening/final synthesis and reporting system. Generates comprehensive summaries and insights.
+🌆 Evening/final synthesis and reporting system. Generates comprehensive summaries and insights.
 
 ---
 
 ## 📖 Overview
 
-Vesper handles core responsibilities in the Indigo system. See SKILL.md for operational details.
+Uvesper handles core responsibilities in the Indigo system. See SKILL.md for operational details.
 
 ---
 
