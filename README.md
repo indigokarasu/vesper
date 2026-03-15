@@ -23,7 +23,7 @@ Daily briefing generator. Aggregates signals into concise morning and evening br
 
 ## 📊 Output & Journals
 
-Produces: Produces briefing records with signal composition, filtering decisions, and synthesis outputs.
+Briefing records with signal composition, filtering decisions, and synthesis outputs.
 
 ---
 
