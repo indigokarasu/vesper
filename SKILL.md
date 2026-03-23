@@ -34,6 +34,53 @@ Vesper does not own: pattern analysis (Corvus), web research (Sift), communicati
 Vesper receives InsightProposal files from Corvus. Vesper may request Dispatch to deliver briefings.
 
 
+
+## Functions
+
+### vesper_briefing_morning()
+
+**Purpose:** generate morning briefing
+
+**Returns:** Operation result
+
+### vesper_briefing_evening()
+
+**Purpose:** generate evening briefing
+
+**Returns:** Operation result
+
+### vesper_briefing_manual()
+
+**Purpose:** on-demand briefing
+
+**Returns:** Operation result
+
+### vesper_decisions_pending()
+
+**Purpose:** list unacted decision requests
+
+**Returns:** Operation result
+
+### vesper_config_set()
+
+**Purpose:** update schedule, sections, delivery
+
+**Returns:** Operation result
+
+### vesper_status()
+
+**Purpose:** last briefing time, pending decisions, schedule
+
+**Returns:** Operation result
+
+### vesper_journal()
+
+**Purpose:** write journal for the current run; called at end of every run
+
+**Returns:** Operation result
+
+
+
 ## Commands
 
 - `vesper.briefing.morning` — generate morning briefing
