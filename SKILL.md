@@ -1,12 +1,14 @@
 ---
 name: ocas-vesper
-description: Vesper: daily briefing generator. Aggregates signals from across the system into concise morning and evening briefings. Surfaces outcomes, opportunities, and decisions in natural language without exposing internal processes. Trigger phrases: 'morning briefing', 'evening briefing', 'what's happening', 'daily brief', 'pending decisions', 'catch me up'. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
+source: https://github.com/indigokarasu/vesper
+install: openclaw skill install https://github.com/indigokarasu/vesper
+description: Use when generating morning or evening briefings, requesting an on-demand system brief, checking pending decisions, or configuring the briefing schedule. Aggregates signals from across the system into concise natural-language summaries. Trigger phrases: 'morning briefing', 'evening briefing', 'what's happening', 'daily brief', 'pending decisions', 'catch me up'. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
 metadata: {"openclaw":{"emoji":"🌅"}}
 ---
 
 # Vesper
 
-Vesper generates concise daily briefings by aggregating signals from across the system. It presents outcomes and opportunities in natural assistant language while hiding internal processes.
+Vesper is the system's daily voice — it aggregates signals from every other skill and presents what matters as a concise, conversational morning or evening briefing, surfacing concrete outcomes, upcoming decisions, and actionable opportunities without exposing any internal architecture or analysis processes. Its signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded, so every briefing earns attention rather than demanding it.
 
 
 ## When to use
@@ -32,53 +34,6 @@ Vesper owns briefing generation, signal aggregation, and decision presentation.
 Vesper does not own: pattern analysis (Corvus), web research (Sift), communications delivery (Dispatch), action decisions (Praxis).
 
 Vesper receives InsightProposal files from Corvus. Vesper may request Dispatch to deliver briefings.
-
-
-
-## Functions
-
-### vesper_briefing_morning()
-
-**Purpose:** generate morning briefing
-
-**Returns:** Operation result
-
-### vesper_briefing_evening()
-
-**Purpose:** generate evening briefing
-
-**Returns:** Operation result
-
-### vesper_briefing_manual()
-
-**Purpose:** on-demand briefing
-
-**Returns:** Operation result
-
-### vesper_decisions_pending()
-
-**Purpose:** list unacted decision requests
-
-**Returns:** Operation result
-
-### vesper_config_set()
-
-**Purpose:** update schedule, sections, delivery
-
-**Returns:** Operation result
-
-### vesper_status()
-
-**Purpose:** last briefing time, pending decisions, schedule
-
-**Returns:** Operation result
-
-### vesper_journal()
-
-**Purpose:** write journal for the current run; called at end of every run
-
-**Returns:** Operation result
-
 
 
 ## Commands
@@ -272,8 +227,9 @@ public
 
 ## Support file map
 
-File | When to read
-`references/schemas.md` | Before creating briefings, sections, or decision requests
-`references/briefing_templates.md` | Before generating briefing content
-`references/signal_filtering.md` | Before evaluating signals for inclusion
-`references/journal.md` | Before vesper.journal; at end of every run
+| File | When to read |
+|---|---|
+| `references/schemas.md` | Before creating briefings, sections, or decision requests |
+| `references/briefing_templates.md` | Before generating briefing content |
+| `references/signal_filtering.md` | Before evaluating signals for inclusion |
+| `references/journal.md` | Before vesper.journal; at end of every run |
