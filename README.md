@@ -1,40 +1,57 @@
 # 🌅 Vesper
 
-Daily briefing generator aggregating signals from across the system.
-
-**Skill name:** `ocas-vesper`
-**Version:** 2.2.0
-**Type:** system
-**Layer:** Interface
-**Author:** Indigo Karasu
+Vesper is the system's daily voice -- it aggregates signals from every other skill and presents what matters as a concise, conversational morning or evening briefing, surfacing concrete outcomes, upcoming decisions, and actionable opportunities without exposing any internal architecture or analysis processes. Its signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded, so every briefing earns attention rather than demanding it.
 
 ---
 
-## Files
+## Overview
 
-| File | Purpose |
+Vesper aggregates signals from every other skill -- portfolio outcomes from Rally, insight proposals from Corvus, pending commitments from Dispatch, upcoming calendar events -- and assembles them into a concise morning or evening briefing in natural language. Its signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded. The result is a briefing that earns attention rather than demanding it, with no internal architecture or system terminology visible to the reader. Vesper also presents pending decision requests with option, benefit, and cost framing -- but never nags about ignored decisions.
+
+## Commands
+
+| Command | Description |
 |---|---|
-| `skill.json` | Package metadata and routing description |
-| `SKILL.md` | Operational instructions for the agent |
-| `references/` | Support files referenced by SKILL.md |
+| `vesper.briefing.morning` | Generate morning briefing |
+| `vesper.briefing.evening` | Generate evening briefing |
+| `vesper.briefing.manual` | On-demand briefing |
+| `vesper.decisions.pending` | List unacted decision requests |
+| `vesper.config.set` | Update schedule, sections, delivery settings |
+| `vesper.status` | Last briefing time, pending decisions, schedule |
+| `vesper.journal` | Write journal for the current run |
 
----
+## Setup
+
+`vesper.init` runs automatically on first invocation and creates all required directories, config.json, and JSONL files. It also registers the `vesper:morning` cron job (daily 7am) and `vesper:evening` cron job (daily 6pm). No manual setup is required.
+
+## Dependencies
+
+**OCAS Skills**
+- [Corvus](https://github.com/indigokarasu/corvus) -- sends InsightProposal files via Vesper intake directory
+- [Dispatch](https://github.com/indigokarasu/dispatch) -- may deliver briefings on request
+- [Rally](https://github.com/indigokarasu/rally) -- portfolio outcome signals for briefing content
+
+**External**
+- Calendar and Weather APIs (for briefing content)
+
+## Scheduled Tasks
+
+| Job | Mechanism | Schedule | Command |
+|---|---|---|---|
+| `vesper:morning` | cron | `0 7 * * *` (daily 7am) | Morning briefing generation |
+| `vesper:evening` | cron | `0 18 * * *` (daily 6pm) | Evening briefing generation |
 
 ## Changelog
 
-### 2.2.0 (2026-03-22)
+### v2.2.0 -- March 22, 2026
+- Routing improvements
 
-- Added short-name routing aliases to skill.json description and SKILL.md frontmatter for natural invocation ('Scout', 'Sift', etc.)
-- Added trigger phrases to descriptions for improved routing accuracy
-- Cross-skill references in descriptions now use 'use X' format for routing clarity
+### v2.1.0 -- March 22, 2026
+- Daily briefing synthesis with Corvus InsightProposal intake
+- Two background cron tasks registered at initialization
 
-### 2.1.0 (2026-03-22)
+### v2.0.0 -- March 18, 2026
+- Initial release as part of the unified OCAS skill suite
+---
 
-- Added Run completion section with explicit intake processing and journal write
-- Added Initialization section with cron registration
-- Added Background tasks section: vesper:morning (daily 7am), vesper:evening (daily 6pm)
-- Removed non-conformant OCAS_ROOT environment variable reference
-
-### 2.0.0 (2026-03-18)
-
-- Initial build of all OCAS skills as a unified suite
+*Vesper is part of the [OpenClaw Agent Suite](https://github.com/indigokarasu) -- a collection of interconnected skills for personal intelligence, autonomous research, and continuous self-improvement. Each skill owns a narrow responsibility and communicates with others through structured signal files, shared journals, and Chronicle, a long-term knowledge graph that accumulates verified facts over time.*
