@@ -19,10 +19,11 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 | `vesper.config.set` | Update schedule, sections, delivery settings |
 | `vesper.status` | Last briefing time, pending decisions, schedule |
 | `vesper.journal` | Write journal for the current run |
+| `vesper.update` | Pull latest from GitHub source (preserves journals and data) |
 
 ## Setup
 
-`vesper.init` runs automatically on first invocation and creates all required directories, config.json, and JSONL files. It also registers the `vesper:morning` cron job (daily 7am) and `vesper:evening` cron job (daily 6pm). No manual setup is required.
+`vesper.init` runs automatically on first invocation and creates all required directories, config.json, and JSONL files. It also registers the `vesper:morning` cron job (daily 7am) and `vesper:evening` cron job (daily 6pm) and `vesper:update` (midnight daily, self-update). No manual setup is required.
 
 ## Dependencies
 
@@ -40,8 +41,12 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 |---|---|---|---|
 | `vesper:morning` | cron | `0 7 * * *` (daily 7am) | Morning briefing generation |
 | `vesper:evening` | cron | `0 18 * * *` (daily 6pm) | Evening briefing generation |
+| `vesper:update` | cron | `0 0 * * *` (midnight daily) | Self-update from GitHub source |
 
 ## Changelog
+
+### v2.2.1 -- March 27, 2026
+- Added `vesper.update` command and midnight cron for automatic version-checked self-updates
 
 ### v2.2.0 -- March 22, 2026
 - Routing improvements

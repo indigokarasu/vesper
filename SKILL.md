@@ -45,6 +45,7 @@ Vesper receives InsightProposal files from Corvus. Vesper may request Dispatch t
 - `vesper.config.set` — update schedule, sections, delivery
 - `vesper.status` — last briefing time, pending decisions, schedule
 - `vesper.journal` — write journal for the current run; called at end of every run
+- `vesper.update` — pull latest from GitHub source; preserves journals and data
 
 
 ## Invocation modes
@@ -197,7 +198,7 @@ On first invocation of any Vesper command, run `vesper.init`:
 2. Write default `config.json` with ConfigBase fields if absent
 3. Create empty JSONL files: `briefings.jsonl`, `signals_evaluated.jsonl`, `decisions_presented.jsonl`, `decisions.jsonl`
 4. Create `~/openclaw/journals/ocas-vesper/`
-5. Register cron jobs `vesper:morning` and `vesper:evening` if not already present (check `openclaw cron list` first)
+5. Register cron jobs `vesper:morning`, `vesper:evening`, and `vesper:update` if not already present (check `openclaw cron list` first)
 6. Log initialization as a DecisionRecord in `decisions.jsonl`
 
 
@@ -207,6 +208,7 @@ On first invocation of any Vesper command, run `vesper.init`:
 |---|---|---|---|
 | `vesper:morning` | cron | `0 7 * * *` (daily 7am) | `vesper.briefing.morning` |
 | `vesper:evening` | cron | `0 18 * * *` (daily 6pm) | `vesper.briefing.evening` |
+| `vesper:update` | cron | `0 0 * * *` (midnight daily) | `vesper.update` |
 
 Cron options: `sessionTarget: isolated`, `lightContext: true`, `wakeMode: next-heartbeat`.
 
@@ -217,7 +219,30 @@ openclaw cron list
 openclaw cron add --name vesper:morning --schedule "0 7 * * *" --command "vesper.briefing.morning" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
 # If vesper:evening absent:
 openclaw cron add --name vesper:evening --schedule "0 18 * * *" --command "vesper.briefing.evening" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
+# If vesper:update absent:
+openclaw cron add --name vesper:update --schedule "0 0 * * *" --command "vesper.update" --sessionTarget isolated --lightContext true --timezone America/Los_Angeles
 ```
+
+
+## Self-update
+
+`vesper.update` pulls the latest package from the `source:` URL in this file's frontmatter. Runs silently — no output unless the version changed or an error occurred.
+
+1. Read `source:` from frontmatter → extract `{owner}/{repo}` from URL
+2. Read local version from `skill.json`
+3. Fetch remote version: `gh api "repos/{owner}/{repo}/contents/skill.json" --jq '.content' | base64 -d | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])"`
+4. If remote version equals local version → stop silently
+5. Download and install:
+   ```bash
+   TMPDIR=$(mktemp -d)
+   gh api "repos/{owner}/{repo}/tarball/main" > "$TMPDIR/archive.tar.gz"
+   mkdir "$TMPDIR/extracted"
+   tar xzf "$TMPDIR/archive.tar.gz" -C "$TMPDIR/extracted" --strip-components=1
+   cp -R "$TMPDIR/extracted/"* ./
+   rm -rf "$TMPDIR"
+   ```
+6. On failure → retry once. If second attempt fails, report the error and stop.
+7. Output exactly: `I updated Vesper from version {old} to {new}`
 
 
 ## Visibility
