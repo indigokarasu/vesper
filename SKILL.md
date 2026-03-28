@@ -2,7 +2,7 @@
 name: ocas-vesper
 source: https://github.com/indigokarasu/vesper
 install: openclaw skill install https://github.com/indigokarasu/vesper
-description: Use when generating morning or evening briefings, requesting an on-demand system brief, checking pending decisions, or configuring the briefing schedule. Aggregates signals from across the system into concise natural-language summaries. Trigger phrases: 'morning briefing', 'evening briefing', 'what's happening', 'daily brief', 'pending decisions', 'catch me up'. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
+description: Use when generating morning or evening briefings, requesting an on-demand system brief, checking pending decisions, or configuring the briefing schedule. Aggregates signals from across the system into concise natural-language summaries. Trigger phrases: 'morning briefing', 'evening briefing', 'what's happening', 'daily brief', 'pending decisions', 'catch me up', 'update vesper'. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
 metadata: {"openclaw":{"emoji":"🌅"}}
 ---
 
