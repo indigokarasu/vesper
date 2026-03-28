@@ -14,5 +14,35 @@
       "~/openclaw/data/ocas-vesper/",
       "~/openclaw/journals/ocas-vesper/"
     ]
-  }
+  },
+  "self_update": {
+    "source": "https://github.com/indigokarasu/vesper",
+    "mechanism": "version-checked tarball from GitHub via gh CLI",
+    "command": "vesper.update",
+    "requires_binaries": [
+      "gh",
+      "tar",
+      "python3"
+    ]
+  },
+  "scheduled_tasks": [
+    {
+      "name": "vesper:morning",
+      "schedule": "0 7 * * *",
+      "command": "vesper.morning",
+      "description": "Morning briefing generation"
+    },
+    {
+      "name": "vesper:evening",
+      "schedule": "0 18 * * *",
+      "command": "vesper.evening",
+      "description": "Evening briefing generation"
+    },
+    {
+      "name": "vesper:update",
+      "schedule": "0 0 * * *",
+      "command": "vesper.update",
+      "description": "Self-update from GitHub source"
+    }
+  ]
 }
