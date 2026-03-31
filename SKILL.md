@@ -206,19 +206,21 @@ On first invocation of any Vesper command, run `vesper.init`:
 
 | Job name | Mechanism | Schedule | Command |
 |---|---|---|---|
-| `vesper:morning` | cron | `0 7 * * *` (daily 7am) | `vesper.briefing.morning` |
-| `vesper:evening` | cron | `0 18 * * *` (daily 6pm) | `vesper.briefing.evening` |
+| `vesper:morning` | cron | `0 6 * * *` (daily 6am) | `vesper.briefing.morning` |
+| `vesper:evening` | cron | `0 20 * * *` (daily 8pm) | `vesper.briefing.evening` |
 | `vesper:update` | cron | `0 0 * * *` (midnight daily) | `vesper.update` |
 
 Cron options: `sessionTarget: isolated`, `lightContext: true`, `wakeMode: next-heartbeat`.
+
+Default times are 6am and 8pm PT. Override with `vesper.config.set morning_hour <H>` and `vesper.config.set evening_hour <H>`.
 
 Registration during `vesper.init`:
 ```
 openclaw cron list
 # If vesper:morning absent:
-openclaw cron add --name vesper:morning --schedule "0 7 * * *" --command "vesper.briefing.morning" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
+openclaw cron add --name vesper:morning --schedule "0 6 * * *" --command "vesper.briefing.morning" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
 # If vesper:evening absent:
-openclaw cron add --name vesper:evening --schedule "0 18 * * *" --command "vesper.briefing.evening" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
+openclaw cron add --name vesper:evening --schedule "0 20 * * *" --command "vesper.briefing.evening" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
 # If vesper:update absent:
 openclaw cron add --name vesper:update --schedule "0 0 * * *" --command "vesper.update" --sessionTarget isolated --lightContext true --timezone America/Los_Angeles
 ```
