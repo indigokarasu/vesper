@@ -35,6 +35,11 @@ Vesper does not own: pattern analysis (Corvus), web research (Sift), communicati
 
 Vesper receives InsightProposal files from Corvus. Vesper may request Dispatch to deliver briefings.
 
+## Ontology types
+
+Vesper does not extract entities and does not emit Signals to Elephas. It aggregates signals and data from other skills for briefing generation only.
+
+Vesper may reference entity names and types from Chronicle or other skill data in briefing content (read-only), but performs no entity extraction or Chronicle writes.
 
 ## Commands
 
@@ -180,8 +185,8 @@ skill_okrs:
 ## Optional skill cooperation
 
 - Corvus — receives InsightProposal files via intake directory
-- Dispatch — may request Dispatch to deliver briefings
-- Rally — reads portfolio outcome signals
+- Dispatch — Vesper may request Dispatch to deliver briefings (session-scoped; Vesper is the requester). See `spec-ocas-interfaces.md` Vesper → Dispatch Briefing Delivery.
+- Rally — reads portfolio daily reports at `~/openclaw/data/ocas-rally/reports/YYYY-MM-DD-daily.json` (cooperative read; no intake directory). See `spec-ocas-interfaces.md` Rally → Vesper Portfolio Outcome.
 - Calendar/Weather — reads external context for briefing content
 
 
