@@ -1,11 +1,14 @@
-# Changelog
+# CHANGELOG
 
-## [2.4.0] - 2026-03-30
+## 2.4.1 — 2026-03-30
+
+### Added
+- Ontology mapping: Vesper explicitly documented as aggregation-only, no entity extraction
 
 ### Changed
-- `vesper:morning` schedule shifted from 7am to 6am PT (`0 6 * * *`)
-- `vesper:evening` schedule shifted from 6pm to 8pm PT (`0 20 * * *`)
-- Updated `skill.json` `scheduled_tasks` to reflect new times
-- Added config override note: schedules are configurable via `vesper.config.set morning_hour <H>` and `vesper.config.set evening_hour <H>`
+- Rally cooperation entry: clarified as cooperative read (Vesper reads daily report file)
+- Dispatch cooperation entry: clarified as Vesper-initiated session-scoped request
 
-## [2.3.1] - prior release
+## Prior
+
+See git log for earlier history.
