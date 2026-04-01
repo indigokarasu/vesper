@@ -24,3 +24,9 @@
 ```json
 {"signal_id":"string","source":"string","relevance_score":"number","included":"boolean","exclusion_reason":"string|null"}
 ```
+
+## VesperBriefingFile
+Written to `briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` after every briefing generation. Read by Dispatch for delivery.
+```json
+{"briefing_id":"string","type":"string — morning|evening|manual","date":"string — YYYY-MM-DD","week":"string — YYYY-WXX","generated_at":"string","content":"string — rendered briefing text","sections":["BriefingSection"]}
+```
