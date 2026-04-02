@@ -45,6 +45,11 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 
 ## Changelog
 
+### v2.6.0 -- April 2, 2026
+- Structured entity observations in journal payloads (`entities_observed`, `relationships_observed`, `preferences_observed`)
+- `user_relevance` tagging on journal observations (`user` for calendar/task entities, `agent_only` for external news context)
+- Elephas journal cooperation in skill cooperation section
+
 ### v2.3.0 -- March 27, 2026
 - Added `vesper.update` command and midnight cron for automatic version-checked self-updates
 
