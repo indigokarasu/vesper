@@ -37,9 +37,13 @@ Vesper receives InsightProposal files from Corvus. Vesper writes completed brief
 
 ## Ontology types
 
-Vesper does not extract entities and does not emit Signals to Elephas. It aggregates signals and data from other skills for briefing generation only.
+Vesper aggregates signals and data from other skills for briefing generation. During aggregation, it observes entities that appear in briefing content:
 
-Vesper may reference entity names and types from Chronicle or other skill data in briefing content (read-only), but performs no entity extraction or Chronicle writes.
+- **Entity/Person** — people mentioned in briefings (from calendar events, messages, task assignments)
+- **Concept/Event** — events and deadlines referenced in briefing sections (meetings, due dates, travel departures)
+- **Place** — locations mentioned in briefing content (meeting venues, travel destinations, weather locations)
+
+Vesper may reference entity names and types from Chronicle or other skill data in briefing content (read-only). Entity observations are recorded in journal outputs for downstream Chronicle ingestion.
 
 ## Commands
 
@@ -197,11 +201,23 @@ skill_okrs:
 - Dispatch — reads `DispatchSummaryReport` from `/workspace/openclaw/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json` for the Messages section (cooperative read; Dispatch owns its data). Dispatch picks up completed briefings from Vesper's `briefings/` directory for delivery.
 - Rally — reads portfolio daily reports at `/workspace/openclaw/data/ocas-rally/reports/YYYY-MM-DD-daily.json` (cooperative read; Rally owns its data).
 - Calendar/Weather — reads external context for briefing content
+- Elephas — journal entity observations consumed during Chronicle ingestion
 
 
 ## Journal outputs
 
 Action Journal — every briefing generation run.
+
+When entities are encountered during a run, include structured entity observations in `decision.payload`:
+
+- `entities_observed` — list of entities encountered (Entity/Person, Concept/Event, Place), each with type, name, and context
+- `relationships_observed` — connections between entities (e.g., a person attending a meeting, an event at a location)
+- `preferences_observed` — user preferences inferred from briefing interactions (e.g., sections the user engages with, decisions acted upon)
+
+Each entity observation must include a `user_relevance` field:
+- `user` — entity is directly related to the user's world (people from the user's calendar/tasks, the user's deadlines, the user's meeting locations). Most entities from the user's own calendar, task list, and messages are `user`-relevant.
+- `agent_only` — entity encountered incidentally from external context (e.g., a public figure mentioned in a news item, a location from a weather feed, entities from aggregated external sources rather than the user's personal data)
+- `unknown` — relevance is unclear
 
 
 ## Initialization

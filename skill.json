@@ -1,6 +1,6 @@
 {
   "name": "ocas-vesper",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Vesper: daily briefing generator. Aggregates signals from across the system into concise morning and evening briefings. Surfaces outcomes, opportunities, and decisions in natural language without exposing internal processes. Trigger phrases: 'morning briefing', 'evening briefing', 'what's happening', 'daily brief', 'pending decisions', 'catch me up', 'update vesper'. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).",
   "author": "Indigo Karasu",
   "email": "mx.indigo.karasu@gmail.com",
