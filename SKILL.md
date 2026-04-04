@@ -77,12 +77,20 @@ Read `references/signal_filtering.md` for full rules.
 
 ## Formatting rules
 
-- Conversational paragraphs, not bullet dumps
-- Section headers use emoji: 📅 Today, ✉️ Messages, 🧭 Logistics, 📈 Markets, 🔐 Decisions, 🛠 System
-- Links use `[[artifact name]]` format
-- Weather in opening paragraph, no section header
-- Decision requests: option, benefit, cost — framed as optional
-- Opportunities surfaced without exposing underlying analysis
+- Output is plain text or minimal HTML suitable for Gmail rendering. No markdown syntax (#, **, ---).
+- Conversational paragraphs, not bullet dumps.
+- Section headers use monochrome extended characters: ▪ Today, ✉ Messages, ⚑ Logistics, ◈ Markets, ⟡ Decisions, ⚙ System.
+- Sections with no content are omitted entirely. Do not render empty sections or "nothing to report" placeholders.
+- Normal-state system health is silence, not confirmation. No "no flags", "systems normal", "all clear".
+- Opening: "Good morning Jared" (no punctuation after greeting). Evening: "Good evening Jared".
+- Weather follows greeting as narrative prose with emoji directly before each condition word. No location callout when at home. When traveling, prefix with location: "Here's what Tokyo looks like today."
+- Weather includes: current temp and condition, 10am commute forecast, high, 4pm commute forecast, low. Friday briefings append a weekend forecast line.
+- Links are inline: the relevant words become the anchor text. No trailing link labels. Calendar events link to gcal, locations link to Google Maps, message references link to Gmail threads, tracking items link to status pages.
+- URI formats: gcal `https://calendar.google.com/calendar/event?eid={event_id}`, maps `https://maps.google.com/?q={place+name+address}`, gmail `https://mail.google.com/mail/u/0/#inbox/{thread_id}`.
+- Markets (morning): "Portfolio closed yesterday at $XXX,XXX (±X.X%)". Markets (evening): "Portfolio opened at $XXX,XXX and closed at $XXX,XXX (±X.X%)". Notable movers only when movement is material.
+- Decision requests: option, benefit, cost, framed as optional.
+- Opportunities surfaced without exposing underlying analysis.
+- When Vibes (ocas-vibes) is present, apply its voice and anti-AI rules to all briefing text.
 
 Read `references/briefing_templates.md` for structure and examples.
 
@@ -106,6 +114,7 @@ After every briefing generation:
 - No references to architecture or analysis processes
 - No speculative observations
 - Only concrete outcomes and actionable opportunities
+- Silence on normal — if a system, section, or status has nothing noteworthy, omit it entirely rather than confirming normalcy
 
 
 ## Inter-skill interfaces
@@ -145,7 +154,7 @@ Default config.json:
 ```json
 {
   "skill_id": "ocas-vesper",
-  "skill_version": "2.5.0",
+  "skill_version": "2.7.0",
   "config_version": "1",
   "created_at": "",
   "updated_at": "",
@@ -196,6 +205,7 @@ skill_okrs:
 
 ## Optional skill cooperation
 
+- Vibes — reads voice identity, channel rules, and anti-AI pattern references from ocas-vibes before generating briefing text. If Vibes is absent, Vesper generates without voice guidance.
 - Corvus — reads InsightProposal files from Corvus's `proposals/` directory (cooperative read; Corvus owns its output)
 - Custodian — reads InsightProposal files from Custodian's `proposals/` directory (cooperative read; Custodian owns its output)
 - Dispatch — reads `DispatchSummaryReport` from `/workspace/openclaw/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json` for the Messages section (cooperative read; Dispatch owns its data). Dispatch picks up completed briefings from Vesper's `briefings/` directory for delivery.
