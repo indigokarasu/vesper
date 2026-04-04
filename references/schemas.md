@@ -7,12 +7,12 @@
 
 ## BriefingSection
 ```json
-{"section_type":"string — today|messages|logistics|markets|decisions|system","emoji_header":"string","content_items":["ContentItem"]}
+{"section_type":"string — today|messages|logistics|markets|decisions|system","section_marker":"string — ▪|✉|⚑|◈|⟡|⚙","content_items":["ContentItem"]}
 ```
 
 ## ContentItem
 ```json
-{"item_id":"string","source_skill":"string","summary":"string","artifact_links":["string"],"decision_request":"DecisionRequest|null"}
+{"item_id":"string","source_skill":"string","summary":"string","inline_links":[{"text":"string","uri":"string","uri_type":"string — gcal|maps|gmail|status"}],"decision_request":"DecisionRequest|null"}
 ```
 
 ## DecisionRequest
