@@ -300,3 +300,13 @@ public
 | `references/briefing_templates.md` | Before generating briefing content |
 | `references/signal_filtering.md` | Before evaluating signals for inclusion |
 | `references/journal.md` | Before vesper.journal; at end of every run |
+
+## Update command
+
+This skill self-updates every 24 hours via:
+
+```bash
+openclaw vesper.update
+```
+
+This pulls the latest version from GitHub and restarts the skill's background tasks if applicable.
