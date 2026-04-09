@@ -11,7 +11,7 @@ description: >
 metadata:
   author: Indigo Karasu
   email: mx.indigo.karasu@gmail.com
-  version: "2.8.0"
+  version: "2.8.1"
   hermes:
     tags: [briefings, aggregation, daily]
     category: preference
@@ -30,12 +30,12 @@ metadata:
     visibility: public
     filesystem:
       read:
-        - "$OCAS_DATA_ROOT/data/ocas-vesper/"
-        - "$OCAS_DATA_ROOT/journals/ocas-vesper/"
-        - "$OCAS_DATA_ROOT/data/*/intake/"
+        - "{agent_root}/commons/data/ocas-vesper/"
+        - "{agent_root}/commons/journals/ocas-vesper/"
+        - "{agent_root}/commons/data/*/"
       write:
-        - "$OCAS_DATA_ROOT/data/ocas-vesper/"
-        - "$OCAS_DATA_ROOT/journals/ocas-vesper/"
+        - "{agent_root}/commons/data/ocas-vesper/"
+        - "{agent_root}/commons/journals/ocas-vesper/"
     self_update:
       source: "https://github.com/indigokarasu/vesper"
       mechanism: "version-checked tarball from GitHub via gh CLI"
@@ -146,10 +146,10 @@ Read `references/briefing_templates.md` for structure and examples.
 
 After every briefing generation:
 
-1. Read InsightProposal files from each skill's `proposals/` directory: `/workspace/openclaw/data/ocas-corvus/proposals/` and `/workspace/openclaw/data/ocas-custodian/proposals/`. Apply signal filtering to each. Track consumed `proposal_id` values in `signals_evaluated.jsonl` to avoid reprocessing on future runs.
-2. Read Dispatch summary from `/workspace/openclaw/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json` if present (where `period` matches the briefing type: `morning` or `evening`). Use `high_priority_threads`, `pending_followups`, and `active_commitments` for the Messages section.
-3. Read Rally daily report from `/workspace/openclaw/data/ocas-rally/reports/YYYY-MM-DD-daily.json` if present. Use for the Markets section.
-4. Write briefing file to `/workspace/openclaw/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` using `VesperBriefingFile` schema. This is Dispatch's pickup source. Week directory format: ISO week e.g. `2026-W14`. Create the week directory if absent.
+1. Read InsightProposal files from each skill's `proposals/` directory: `{agent_root}/commons/data/ocas-corvus/proposals/` and `{agent_root}/commons/data/ocas-custodian/proposals/`. Apply signal filtering to each. Track consumed `proposal_id` values in `signals_evaluated.jsonl` to avoid reprocessing on future runs.
+2. Read Dispatch summary from `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json` if present (where `period` matches the briefing type: `morning` or `evening`). Use `high_priority_threads`, `pending_followups`, and `active_commitments` for the Messages section.
+3. Read Rally daily report from `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json` if present. Use for the Markets section.
+4. Write briefing file to `{agent_root}/commons/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` using `VesperBriefingFile` schema. This is Dispatch's pickup source. Week directory format: ISO week e.g. `2026-W14`. Create the week directory if absent.
 5. Persist briefing record and evaluated signals to local JSONL files
 6. Log material decisions to `decisions.jsonl`
 7. Write journal via `vesper.journal`
@@ -166,21 +166,21 @@ After every briefing generation:
 
 ## Inter-skill interfaces
 
-**Corvus → Vesper (cooperative read):** Corvus writes InsightProposal files to `/workspace/openclaw/data/ocas-corvus/proposals/{proposal_id}.json`. Vesper reads from this directory during briefing generation, applies signal filtering, and tracks consumed `proposal_id` values in its own `signals_evaluated.jsonl`. Corvus does not write to Vesper's directories. See `spec-ocas-interfaces.md` for the InsightProposal schema.
+**Corvus → Vesper (cooperative read):** Corvus writes InsightProposal files to `{agent_root}/commons/data/ocas-corvus/proposals/{proposal_id}.json`. Vesper reads from this directory during briefing generation, applies signal filtering, and tracks consumed `proposal_id` values in its own `signals_evaluated.jsonl`. Corvus does not write to Vesper's directories. See `spec-ocas-interfaces.md` for the InsightProposal schema.
 
-**Custodian → Vesper (cooperative read):** Custodian writes InsightProposal files (`anomaly_alert` type) to `/workspace/openclaw/data/ocas-custodian/proposals/{proposal_id}.json` on Tier 3/4 escalations. Vesper reads from this directory during briefing generation. Custodian does not write to Vesper's directories.
+**Custodian → Vesper (cooperative read):** Custodian writes InsightProposal files (`anomaly_alert` type) to `{agent_root}/commons/data/ocas-custodian/proposals/{proposal_id}.json` on Tier 3/4 escalations. Vesper reads from this directory during briefing generation. Custodian does not write to Vesper's directories.
 
-**Dispatch → Vesper (cooperative read):** Dispatch writes `DispatchSummaryReport` to `/workspace/openclaw/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json`. Vesper reads this during briefing generation. Dispatch does not write to Vesper's directories.
+**Dispatch → Vesper (cooperative read):** Dispatch writes `DispatchSummaryReport` to `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json`. Vesper reads this during briefing generation. Dispatch does not write to Vesper's directories.
 
-**Rally → Vesper (cooperative read):** Rally writes daily portfolio reports to `/workspace/openclaw/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper reads this during briefing generation. Rally does not write to Vesper's directories.
+**Rally → Vesper (cooperative read):** Rally writes daily portfolio reports to `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper reads this during briefing generation. Rally does not write to Vesper's directories.
 
-**Vesper → Dispatch (cooperative read):** Vesper writes completed briefings to `/workspace/openclaw/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json`. Dispatch reads this directory, identifies undelivered briefings, and delivers them. See `references/schemas.md` VesperBriefingFile.
+**Vesper → Dispatch (cooperative read):** Vesper writes completed briefings to `{agent_root}/commons/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json`. Dispatch reads this directory, identifies undelivered briefings, and delivers them. See `references/schemas.md` VesperBriefingFile.
 
 
 ## Storage layout
 
 ```
-/workspace/openclaw/data/ocas-vesper/
+{agent_root}/commons/data/ocas-vesper/
   config.json
   briefings.jsonl
   signals_evaluated.jsonl
@@ -191,7 +191,7 @@ After every briefing generation:
       YYYY-MM-DD-morning.json
       YYYY-MM-DD-evening.json
 
-/workspace/openclaw/journals/ocas-vesper/
+{agent_root}/commons/journals/ocas-vesper/
   YYYY-MM-DD/
     {run_id}.json
 ```
@@ -255,8 +255,8 @@ skill_okrs:
 - Vibes — reads voice identity, channel rules, and anti-AI pattern references from ocas-vibes before generating briefing text. If Vibes is absent, Vesper generates without voice guidance.
 - Corvus — reads InsightProposal files from Corvus's `proposals/` directory (cooperative read; Corvus owns its output)
 - Custodian — reads InsightProposal files from Custodian's `proposals/` directory (cooperative read; Custodian owns its output)
-- Dispatch — reads `DispatchSummaryReport` from `/workspace/openclaw/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json` for the Messages section (cooperative read; Dispatch owns its data). Dispatch picks up completed briefings from Vesper's `briefings/` directory for delivery.
-- Rally — reads portfolio daily reports at `/workspace/openclaw/data/ocas-rally/reports/YYYY-MM-DD-daily.json` (cooperative read; Rally owns its data).
+- Dispatch — reads `DispatchSummaryReport` from `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json` for the Messages section (cooperative read; Dispatch owns its data). Dispatch picks up completed briefings from Vesper's `briefings/` directory for delivery.
+- Rally — reads portfolio daily reports at `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json` (cooperative read; Rally owns its data).
 - Calendar/Weather — reads external context for briefing content
 - Elephas — journal entity observations consumed during Chronicle ingestion
 
@@ -281,10 +281,10 @@ Each entity observation must include a `user_relevance` field:
 
 On first invocation of any Vesper command, run `vesper.init`:
 
-1. Create `/workspace/openclaw/data/ocas-vesper/` and subdirectories (`briefings/`)
+1. Create `{agent_root}/commons/data/ocas-vesper/` and subdirectories (`briefings/`)
 2. Write default `config.json` with ConfigBase fields if absent
 3. Create empty JSONL files: `briefings.jsonl`, `signals_evaluated.jsonl`, `decisions_presented.jsonl`, `decisions.jsonl`
-4. Create `/workspace/openclaw/journals/ocas-vesper/`
+4. Create `{agent_root}/commons/journals/ocas-vesper/`
 5. Register cron jobs `vesper:morning`, `vesper:evening`, and `vesper:update` if not already present (check the platform scheduling registry first)
 6. Log initialization as a DecisionRecord in `decisions.jsonl`
 

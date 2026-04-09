@@ -31,7 +31,7 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 ## Dependencies
 
 **OCAS Skills**
-- [Corvus](https://github.com/indigokarasu/corvus) -- sends InsightProposal files via Vesper intake directory
+- [Corvus](https://github.com/indigokarasu/corvus) -- sends InsightProposal files via Vesper journal payload
 - [Dispatch](https://github.com/indigokarasu/dispatch) -- may deliver briefings on request
 - [Rally](https://github.com/indigokarasu/rally) -- portfolio outcome signals for briefing content
 
@@ -60,7 +60,7 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 - Routing improvements
 
 ### v2.1.0 -- March 22, 2026
-- Daily briefing synthesis with Corvus InsightProposal intake
+- Daily briefing synthesis with Corvus journal briefing payloads
 - Two background cron tasks registered at initialization
 
 ### v2.0.0 -- March 18, 2026
