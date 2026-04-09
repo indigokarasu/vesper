@@ -1,9 +1,56 @@
 ---
 name: ocas-vesper
-source: https://github.com/indigokarasu/vesper
-install: openclaw skill install https://github.com/indigokarasu/vesper
-description: Use when generating morning or evening briefings, requesting an on-demand system brief, checking pending decisions, or configuring the briefing schedule. Aggregates signals from across the system into concise natural-language summaries. Trigger phrases: 'morning briefing', 'evening briefing', 'what's happening', 'daily brief', 'pending decisions', 'catch me up', 'update vesper'. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
-metadata: {"openclaw":{"emoji":"🌅"}}
+description: >
+  Vesper: daily briefing generator. Aggregates signals from across the system
+  into concise morning and evening briefings. Surfaces outcomes,
+  opportunities, and decisions in natural language without exposing internal
+  processes. Trigger phrases: 'morning briefing', 'evening briefing', 'what's
+  happening', 'daily brief', 'pending decisions', 'catch me up', 'update
+  vesper'. Do not use for deep research (use Sift), pattern analysis (use
+  Corvus), or message drafting (use Dispatch).
+metadata:
+  author: Indigo Karasu
+  email: mx.indigo.karasu@gmail.com
+  version: "2.8.0"
+  hermes:
+    tags: [briefings, aggregation, daily]
+    category: preference
+    cron:
+      - name: "vesper:morning"
+        schedule: "0 6 * * *"
+        command: "vesper.morning"
+      - name: "vesper:evening"
+        schedule: "0 20 * * *"
+        command: "vesper.evening"
+      - name: "vesper:update"
+        schedule: "0 0 * * *"
+        command: "vesper.update"
+  openclaw:
+    skill_type: system
+    visibility: public
+    filesystem:
+      read:
+        - "$OCAS_DATA_ROOT/data/ocas-vesper/"
+        - "$OCAS_DATA_ROOT/journals/ocas-vesper/"
+        - "$OCAS_DATA_ROOT/data/*/intake/"
+      write:
+        - "$OCAS_DATA_ROOT/data/ocas-vesper/"
+        - "$OCAS_DATA_ROOT/journals/ocas-vesper/"
+    self_update:
+      source: "https://github.com/indigokarasu/vesper"
+      mechanism: "version-checked tarball from GitHub via gh CLI"
+      command: "vesper.update"
+      requires_binaries: [gh, tar, python3]
+    cron:
+      - name: "vesper:morning"
+        schedule: "0 6 * * *"
+        command: "vesper.morning"
+      - name: "vesper:evening"
+        schedule: "0 20 * * *"
+        command: "vesper.evening"
+      - name: "vesper:update"
+        schedule: "0 0 * * *"
+        command: "vesper.update"
 ---
 
 # Vesper
@@ -238,7 +285,7 @@ On first invocation of any Vesper command, run `vesper.init`:
 2. Write default `config.json` with ConfigBase fields if absent
 3. Create empty JSONL files: `briefings.jsonl`, `signals_evaluated.jsonl`, `decisions_presented.jsonl`, `decisions.jsonl`
 4. Create `/workspace/openclaw/journals/ocas-vesper/`
-5. Register cron jobs `vesper:morning`, `vesper:evening`, and `vesper:update` if not already present (check `openclaw cron list` first)
+5. Register cron jobs `vesper:morning`, `vesper:evening`, and `vesper:update` if not already present (check the platform scheduling registry first)
 6. Log initialization as a DecisionRecord in `decisions.jsonl`
 
 
@@ -256,13 +303,12 @@ Default times are 6am and 8pm PT. Override with `vesper.config.set morning_hour 
 
 Registration during `vesper.init`:
 ```
-openclaw cron list
-# If vesper:morning absent:
-openclaw cron add --name vesper:morning --schedule "0 6 * * *" --command "vesper.briefing.morning" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
+# Check platform scheduling registry for existing tasks
+# Task declared in SKILL.md frontmatter metadata.{platform}.cron
 # If vesper:evening absent:
-openclaw cron add --name vesper:evening --schedule "0 20 * * *" --command "vesper.briefing.evening" --sessionTarget isolated --lightContext true --wakeMode next-heartbeat --timezone America/Los_Angeles
+# Task declared in SKILL.md frontmatter metadata.{platform}.cron
 # If vesper:update absent:
-openclaw cron add --name vesper:update --schedule "0 0 * * *" --command "vesper.update" --sessionTarget isolated --lightContext true --timezone America/Los_Angeles
+# Task declared in SKILL.md frontmatter metadata.{platform}.cron
 ```
 
 
