@@ -11,7 +11,7 @@ description: >
 metadata:
   author: Indigo Karasu
   email: mx.indigo.karasu@gmail.com
-  version: "2.8.1"
+  version: "2.8.2"
   hermes:
     tags: [briefings, aggregation, daily]
     category: preference
@@ -352,7 +352,7 @@ public
 This skill self-updates every 24 hours via:
 
 ```bash
-openclaw vesper.update
+vesper.update
 ```
 
 This pulls the latest version from GitHub and restarts the skill's background tasks if applicable.
