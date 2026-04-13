@@ -1,3 +1,10 @@
+## [2.8.4] - 2026-04-12
+
+### Added
+- Weather rendering: Open-Meteo Fahrenheit parameter, WMO code→emoji mapping table
+- Briefing email HTML structure documented with correct section order
+- Weather line appears in morning briefings only (clarified)
+
 ## [2026-04-04] Spec Compliance Update
 
 ### Changes

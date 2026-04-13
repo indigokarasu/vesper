@@ -48,6 +48,9 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 
 ## Changelog
 
+### v2.8.4 — April 12, 2026
+- Document weather rendering (Fahrenheit param, WMO codes) and briefing HTML structure
+
 ### v2.6.0 -- April 2, 2026
 - Structured entity observations in journal payloads (`entities_observed`, `relationships_observed`, `preferences_observed`)
 - `user_relevance` tagging on journal observations (`user` for calendar/task entities, `agent_only` for external news context)
