@@ -74,7 +74,32 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 - Action execution — use relevant domain skill
 
 
-## Responsibility boundary
+## Integrated: briefing-pipeline (Weather & HTML Structure)
+
+### Weather Rendering
+Use Open-Meteo API with `&temperature_unit=fahrenheit`. Default is Celsius; must explicitly request Fahrenheit.
+WMO code mapping: 0=☀️clear, 1=🌤mostly clear, 2=⛅partly cloudy, 3=☁️overcast, 45=🌫fog, 61=🌧rain, etc.
+
+### HTML Structure Fixes
+Correct layout for briefings:
+```html
+<<pp>Good evening Jared</p>
+<<pp style="font-size: 15px;">{current_emoji} {temp}°F. {10am_emoji} {temp}°F by 10am. High of {temp}°F, {4pm_emoji} {temp}°F at 4pm, dropping to {temp}°F overnight.</p>
+<!-- Note: Only include weather in MORNING briefings per spec -->
+<<pp><<strongstrong>▪ Today/Tomorrow</strong></p>
+<<pp>{Calendar events or "clear day"}</p>
+<<pp><<strongstrong>✉ Inbox</strong></p>
+<!-- Top 5 interesting threads with Gmail links -->
+<<pp><<strongstrong>◈ Markets</strong></p>
+<<pp>{Rally portfolio + market data}</p>
+<<pp><<strongstrong>⟡ Decisions</strong></p>
+<<pp>{Pending items}</p>
+```
+
+### Account Isolation (CRITICAL)
+- **Jared's Google account**: `~/.hermes/google_token.json` (jared.zimmerman@gmail.com). Use for calendar queries, inbox scanning, contact data.
+- **Indigo's Google account**: `~/.hermes-indigo/google_token.json` (mx.indigo.karasu@gmail.com). Use for sending briefing emails FROM Indigo TO Jared.
+**Never read Jared's Calendar or Inbox from Indigo's token.**
 
 Vesper owns briefing generation, signal aggregation, and decision presentation.
 
