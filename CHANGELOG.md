@@ -1,3 +1,18 @@
+## [2.9.0] - 2026-04-18
+
+### Changed
+- Extracted delivery troubleshooting runbook (trigger conditions, three failure modes, diagnostic checklist) from SKILL.md into `references/delivery-troubleshooting.md`; SKILL.md now carries a short pointer under Error handling.
+- Moved WMO weather code → emoji table and Open-Meteo rendering notes into `references/weather-codes.md`; SKILL.md Weather rendering section reduced to a pointer.
+- Moved HTML briefing template into `references/html-templates.md`; SKILL.md Briefing email structure section reduced to a pointer.
+- Fixed corrupted HTML artifacts (`<<pp>`, `<<strongstrong>`) introduced in the briefing-pipeline merge; now rendered correctly as `<p>` and `<strong>` in the template reference.
+- Consolidated Account Isolation rules under a dedicated top-level section.
+
+### Added
+- `references/delivery-troubleshooting.md`
+- `references/weather-codes.md`
+- `references/html-templates.md`
+- Support file map entries for the three new references.
+
 ## [2.8.4] - 2026-04-12
 
 ### Added

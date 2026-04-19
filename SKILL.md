@@ -11,7 +11,7 @@ description: >
 metadata:
   author: Indigo Karasu
   email: mx.indigo.karasu@gmail.com
-  version: "2.8.4"
+  version: "2.9.0"
   hermes:
     tags: [briefings, aggregation, daily]
     category: preference
@@ -74,7 +74,13 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 - Action execution — use relevant domain skill
 
 
-## Responsibility boundary
+## Account Isolation (CRITICAL)
+
+- **Jared's Google account**: `~/.hermes/google_token.json` (jared.zimmerman@gmail.com). Use for calendar queries, inbox scanning, contact data.
+- **Indigo's Google account**: `~/.hermes-indigo/google_token.json` (mx.indigo.karasu@gmail.com). Use for sending briefing emails FROM Indigo TO Jared.
+**Never read Jared's Calendar or Inbox from Indigo's token.**
+
+## Ownership
 
 Vesper owns briefing generation, signal aggregation, and decision presentation.
 
@@ -142,38 +148,12 @@ Read `references/signal_filtering.md` for full rules.
 Read `references/briefing_templates.md` for structure and examples.
 
 ### Weather rendering
-Use the Open-Meteo API with `&temperature_unit=fahrenheit` — the API defaults to Celsius; the parameter must be explicit.
 
-WMO weather code emoji mapping:
-| Code | Emoji | Description |
-|------|-------|-------------|
-| 0 | ☀️ | Clear sky |
-| 1 | 🌤 | Mainly clear |
-| 2 | ⛅ | Partly cloudy |
-| 3 | ☁️ | Overcast |
-| 45, 48 | 🌫 | Fog |
-| 51, 53, 55 | 🌦 | Drizzle |
-| 61, 63, 65 | 🌧 | Rain |
-| 71, 73, 75 | 🌨 | Snow |
-| 80, 81, 82 | 🌦 | Rain showers |
-| 95 | ⛈ | Thunderstorm |
-
-Weather is included in **morning briefings only**.
+See `references/weather-codes.md` for the WMO code → emoji mapping and Open-Meteo API notes. Weather is included in morning briefings only.
 
 ### Briefing email structure
-```html
-<p>Good morning/evening Jared</p>
-<p style="font-size: 15px;">{weather_emoji} {temp}°F. {10am_emoji} {10am_temp}°F by 10am. High of {high}°F, {4pm_emoji} {4pm_temp}°F at 4pm, dropping to {overnight_temp}°F overnight.</p>
-<p><strong>▪ Today/Tomorrow</strong></p>
-<p>{Calendar events or "clear day"}</p>
-<p><strong>✉ Inbox</strong></p>
-<p>{Top 5 threads with Gmail links}</p>
-<p><strong>◈ Markets</strong></p>
-<p>{Rally portfolio + market data}</p>
-<p><strong>⟡ Decisions</strong></p>
-<p>{Pending items}</p>
-```
-Weather line appears in morning briefings only — omit from evening briefings.
+
+See `references/html-templates.md` for the HTML layout used for morning and evening briefings.
 
 
 ## Run completion
@@ -380,6 +360,9 @@ public
 | `references/briefing_templates.md` | Before generating briefing content |
 | `references/signal_filtering.md` | Before evaluating signals for inclusion |
 | `references/journal.md` | Before vesper.journal; at end of every run |
+| `references/html-templates.md` | Before rendering briefing email HTML |
+| `references/weather-codes.md` | Before rendering the weather line (morning briefings) |
+| `references/delivery-troubleshooting.md` | When a briefing is generated but not delivered |
 
 ## Update command
 
@@ -390,3 +373,8 @@ vesper.update
 ```
 
 This pulls the latest version from GitHub and restarts the skill's background tasks if applicable.
+
+
+## Error handling
+
+On briefing delivery failure: see `references/delivery-troubleshooting.md` for trigger conditions, failure modes (SMTP, Gmail API, HTML rendering), and recovery steps.
