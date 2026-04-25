@@ -17,13 +17,13 @@ metadata:
     category: preference
     cron:
       - name: "vesper:morning"
-        schedule: "0 6 * * *"
+        schedule: "10 13 * * *"
         command: "vesper.morning"
       - name: "vesper:evening"
-        schedule: "0 20 * * *"
+        schedule: "10 3 * * *"
         command: "vesper.evening"
       - name: "vesper:update"
-        schedule: "0 0 * * *"
+        schedule: "5 7 * * *"
         command: "vesper.update"
   openclaw:
     skill_type: system
@@ -43,13 +43,13 @@ metadata:
       requires_binaries: [gh, tar, python3]
     cron:
       - name: "vesper:morning"
-        schedule: "0 6 * * *"
+        schedule: "10 13 * * *"
         command: "vesper.morning"
       - name: "vesper:evening"
-        schedule: "0 20 * * *"
+        schedule: "10 3 * * *"
         command: "vesper.evening"
       - name: "vesper:update"
-        schedule: "0 0 * * *"
+        schedule: "5 7 * * *"
         command: "vesper.update"
 ---
 
