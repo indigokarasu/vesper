@@ -11,7 +11,7 @@ description: >
 metadata:
   author: Indigo Karasu
   email: mx.indigo.karasu@gmail.com
-  version: "2.9.0"
+  version: "2.10.0"
   hermes:
     tags: [briefings, aggregation, daily]
     category: preference
@@ -103,6 +103,8 @@ Vesper may reference entity names and types from Chronicle or other skill data i
 - `vesper.briefing.morning` — generate morning briefing
 - `vesper.briefing.evening` — generate evening briefing
 - `vesper.briefing.manual` — on-demand briefing
+- `vesper.briefing.deliver` — deliver undelivered briefings via email (`scripts/briefing_deliver.py`)
+- `vesper.briefing.check` — inspect the latest briefing file (`scripts/check_briefing.py`)
 - `vesper.decisions.pending` — list unacted decision requests
 - `vesper.config.set` — update schedule, sections, delivery
 - `vesper.status` — last briefing time, pending decisions, schedule
