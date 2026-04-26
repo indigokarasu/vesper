@@ -1,3 +1,10 @@
+## [2.10.0] - 2026-04-26
+
+### Added
+- `scripts/briefing_deliver.py` — Gmail-based briefing delivery (moved from `ocas-dispatch` per OCAS boundary discipline; briefing delivery is Vesper's responsibility, not Dispatch's)
+- `scripts/check_briefing.py` — diagnostic utility to inspect the latest briefing file
+- `vesper.briefing.deliver` and `vesper.briefing.check` commands documenting the new scripts
+
 ## [2.9.0] - 2026-04-18
 
 ### Changed
