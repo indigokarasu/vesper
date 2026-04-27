@@ -48,6 +48,11 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 
 ## Changelog
 
+### v2.10.0 — April 26, 2026
+- Added `scripts/briefing_deliver.py` — Gmail-based briefing delivery (moved from `ocas-dispatch` per OCAS boundary discipline)
+- Added `scripts/check_briefing.py` — diagnostic utility to inspect the latest briefing file
+- Added `vesper.briefing.deliver` and `vesper.briefing.check` commands
+
 ### v2.8.4 — April 12, 2026
 - Document weather rendering (Fahrenheit param, WMO codes) and briefing HTML structure
 
@@ -61,13 +66,6 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 
 ### v2.2.0 -- March 22, 2026
 - Routing improvements
-
-### v2.1.0 -- March 22, 2026
-- Daily briefing synthesis with Corvus journal briefing payloads
-- Two background cron tasks registered at initialization
-
-### v2.0.0 -- March 18, 2026
-- Initial release as part of the unified OCAS skill suite
 ---
 
 *Vesper is part of the [OCAS Agent Suite](https://github.com/indigokarasu) -- a collection of interconnected skills for personal intelligence, autonomous research, and continuous self-improvement. Each skill owns a narrow responsibility and communicates with others through structured signal files, shared journals, and Chronicle, a long-term knowledge graph that accumulates verified facts over time.*
