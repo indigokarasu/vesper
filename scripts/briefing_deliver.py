@@ -14,9 +14,9 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 
-HERMES_ROOT = Path(os.environ.get('HERMES_HOME', '<hermes-root>'))
-VESPER_BRIEFINGS = HERMES_ROOT / 'commons/data/ocas-vesper/briefings'
-TOKEN_PATH = '<hermes-root>/indigo_google_credentials.json'
+AGENT_ROOT = Path(os.environ.get('AGENT_ROOT', Path.home() / '.hermes'))
+VESPER_BRIEFINGS = AGENT_ROOT / 'commons/data/ocas-vesper/briefings'
+TOKEN_PATH = AGENT_ROOT / 'indigo_google_credentials.json'
 RECIPIENT = 'google-workspace-user'
 
 def get_gmail_service():

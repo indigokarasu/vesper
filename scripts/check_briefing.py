@@ -1,7 +1,10 @@
 import json, datetime, os, glob
+from pathlib import Path
+
+AGENT_ROOT = Path(os.environ.get("AGENT_ROOT", Path.home() / ".hermes"))
 
 # Read the latest Vesper briefing
-briefings_dir = "<hermes-root>/data/hermes-vesper/briefings/"
+briefings_dir = str(AGENT_ROOT / "commons/data/ocas-vesper/briefings")
 today = datetime.date.today().isoformat()
 
 # Find the latest briefing file
