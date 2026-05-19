@@ -100,6 +100,12 @@ Vesper does not own: pattern analysis (Corvus), web research (Sift), communicati
 
 Vesper receives InsightProposal files from Corvus. Vesper writes completed briefings to its `briefings/` directory; Dispatch picks them up and delivers them.
 
+## Responsibility boundary
+
+Vesper owns daily briefing generation and delivery. It aggregates signals from Corvus, Rally, Sands, Dispatch, and Calendar into morning and evening briefings.
+
+Vesper does not: generate signals (Corvus), manage portfolios (Rally), manage calendars (Sands), send communications (Dispatch), or perform research (Sift/Scout). It surfaces outcomes; it does not act.
+
 ## Ontology types
 
 Vesper aggregates signals and data from other skills for briefing generation. During aggregation, it observes entities that appear in briefing content:
