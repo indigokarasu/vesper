@@ -69,7 +69,6 @@ metadata:
 
 Vesper is the system's daily voice — it aggregates signals from every other skill and presents what matters as a concise, conversational morning or evening briefing, surfacing concrete outcomes, upcoming decisions, and actionable opportunities without exposing any internal architecture or analysis processes. Its signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded, so every briefing earns attention rather than demanding it.
 
-
 ## When to use
 
 - Generate morning or evening briefing
@@ -77,14 +76,12 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 - Check pending decision requests
 - Configure briefing schedule or sections
 
-
 ## When not to use
 
 - Deep research — use Sift
 - Pattern analysis — use Corvus
 - Message drafting — use Dispatch
 - Action execution — use relevant domain skill
-
 
 ## Account Isolation (CRITICAL)
 
@@ -129,13 +126,11 @@ Vesper may reference entity names and types from Chronicle or other skill data i
 - `vesper.journal` — write journal for the current run; called at end of every run
 - `vesper.update` — pull latest from GitHub source; preserves journals and data
 
-
 ## Invocation modes
 
 - **Automatic morning** — during configured morning window
 - **Automatic evening** — during configured evening window
 - **Manual** — on user request
-
 
 ## Signal filtering rules
 
@@ -146,7 +141,6 @@ Exclude: routine background activity, already-experienced events, internal syste
 Evening-specific: no past weather, no summaries of attended meetings.
 
 Read `references/signal_filtering.md` for full rules.
-
 
 ## Formatting rules
 
@@ -175,7 +169,6 @@ See `references/weather-codes.md` for the WMO code → emoji mapping and Open-Me
 
 See `references/html-templates.md` for the HTML layout used for morning and evening briefings.
 
-
 ## Run completion
 
 After every briefing generation:
@@ -197,7 +190,6 @@ After every briefing generation:
 - Only concrete outcomes and actionable opportunities
 - Silence on normal — if a system, section, or status has nothing noteworthy, omit it entirely rather than confirming normalcy
 
-
 ## Inter-skill interfaces
 
 **Corvus → Vesper (cooperative read):** Corvus writes InsightProposal files to `{agent_root}/commons/data/ocas-corvus/proposals/{proposal_id}.json`. Vesper reads from this directory during briefing generation, applies signal filtering, and tracks consumed `proposal_id` values in its own `signals_evaluated.jsonl`. Corvus does not write to Vesper's directories. See `spec-ocas-interfaces.md` for the InsightProposal schema.
@@ -209,7 +201,6 @@ After every briefing generation:
 **Rally → Vesper (cooperative read):** Rally writes daily portfolio reports to `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper reads this during briefing generation. Rally does not write to Vesper's directories.
 
 **Vesper → Dispatch (cooperative read):** Vesper writes completed briefings to `{agent_root}/commons/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json`. Dispatch reads this directory, identifies undelivered briefings, and delivers them. See `references/schemas.md` VesperBriefingFile.
-
 
 ## Storage layout
 
@@ -229,7 +220,6 @@ After every briefing generation:
   YYYY-MM-DD/
     {run_id}.json
 ```
-
 
 Default config.json:
 ```json
@@ -259,7 +249,6 @@ Default config.json:
 }
 ```
 
-
 ## OKRs
 
 Universal OKRs from spec-ocas-journal.md apply to all runs.
@@ -283,7 +272,6 @@ skill_okrs:
     evaluation_window: 30_runs
 ```
 
-
 ## Optional skill cooperation
 
 - Vibes — reads voice identity, channel rules, and anti-AI pattern references from ocas-vibes before generating briefing text. If Vibes is absent, Vesper generates without voice guidance.
@@ -293,7 +281,6 @@ skill_okrs:
 - Rally — reads portfolio daily reports at `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json` (cooperative read; Rally owns its data).
 - Calendar/Weather — reads external context for briefing content
 - Elephas — journal entity observations consumed during Chronicle ingestion
-
 
 ## Journal outputs
 
@@ -310,7 +297,6 @@ Each entity observation must include a `user_relevance` field:
 - `agent_only` — entity encountered incidentally from external context (e.g., a public figure mentioned in a news item, a location from a weather feed, entities from aggregated external sources rather than the user's personal data)
 - `unknown` — relevance is unclear
 
-
 ## Initialization
 
 On first invocation of any Vesper command, run `vesper.init`:
@@ -321,7 +307,6 @@ On first invocation of any Vesper command, run `vesper.init`:
 4. Create `{agent_root}/commons/journals/ocas-vesper/`
 5. Register cron jobs `vesper:morning`, `vesper:evening`, and `vesper:update` if not already present (check the platform scheduling registry first)
 6. Log initialization as a DecisionRecord in `decisions.jsonl`
-
 
 ## Background tasks
 
@@ -345,7 +330,6 @@ Registration during `vesper.init`:
 # Task declared in SKILL.md frontmatter metadata.{platform}.cron
 ```
 
-
 ## Self-update
 
 `vesper.update` pulls the latest package from the `source:` URL in this file's frontmatter. Runs silently — no output unless the version changed or an error occurred.
@@ -366,11 +350,9 @@ Registration during `vesper.init`:
 6. On failure → retry once. If second attempt fails, report the error and stop.
 7. Output exactly: `I updated Vesper from version {old} to {new}`
 
-
 ## Visibility
 
 public
-
 
 ## Support file map
 
@@ -393,7 +375,6 @@ vesper.update
 ```
 
 This pulls the latest version from GitHub and restarts the skill's background tasks if applicable.
-
 
 ## Error handling
 
