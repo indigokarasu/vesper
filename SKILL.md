@@ -88,7 +88,7 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 
 ## Account Isolation (CRITICAL)
 
-- **owner's Google account**: `~/.hermes/google_token.json` (google-workspace-user). Use for calendar queries, inbox scanning, contact data.
+- **owner's Google account**: `{agent_root}/google_token.json` (google-workspace-user). Use for calendar queries, inbox scanning, contact data.
 - **Indigo's Google account**: `~/.hermes-indigo/google_token.json` (mx.indigo.karasu@gmail.com). Use for sending briefing emails FROM Indigo TO owner.
 **Never read owner's Calendar or Inbox from Indigo's token.**
 
