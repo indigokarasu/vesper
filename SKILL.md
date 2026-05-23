@@ -1,68 +1,17 @@
 ---
 name: ocas-vesper
-description: >
-  Vesper: daily briefing generator. Aggregates signals from across the system
-  into concise morning and evening briefings. Surfaces outcomes,
-  opportunities, and decisions in natural language without exposing internal
-  processes. Trigger phrases: 'morning briefing', 'evening briefing', 'what's
-  happening', 'daily brief', 'pending decisions', 'catch me up', 'update
-  vesper'. Do not use for deep research (use Sift), pattern analysis (use
-  Corvus), or message drafting (use Dispatch).
+description: 'Vesper: daily briefing generator. Aggregates signals from across the
+  system into concise morning and evening briefings. Surfaces outcomes, opportunities,
+  and decisions in natural language without exposing internal processes. Trigger phrases:
+  ''morning briefing'', ''evening briefing'', ''what''s happening'', ''daily brief'',
+  ''pending decisions'', ''catch me up'', ''update vesper''. Do not use for deep research
+  (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
+
+  '
+license: MIT
 metadata:
   author: Indigo Karasu
-  email: mx.indigo.karasu@gmail.com
-  version: "2.10.0"
-  hermes:
-    tags: [briefings, aggregation, daily]
-    category: preference
-    cron:
-      - name: "vesper:morning"
-        schedule: "10 13 * * *"
-        command: "vesper.morning"
-      - name: "vesper:evening"
-        schedule: "10 3 * * *"
-        command: "vesper.evening"
-      - name: "vesper:deliver-morning"
-        schedule: "40 13 * * *"
-        command: "python3 {agent_root}/skills/ocas-vesper/scripts/briefing_deliver.py"
-      - name: "vesper:deliver-evening"
-        schedule: "40 3 * * *"
-        command: "python3 {agent_root}/skills/ocas-vesper/scripts/briefing_deliver.py"
-      - name: "vesper:update"
-        schedule: "5 7 * * *"
-        command: "vesper.update"
-  openclaw:
-    skill_type: system
-    visibility: public
-    filesystem:
-      read:
-        - "{agent_root}/commons/data/ocas-vesper/"
-        - "{agent_root}/commons/journals/ocas-vesper/"
-        - "{agent_root}/commons/data/*/"
-      write:
-        - "{agent_root}/commons/data/ocas-vesper/"
-        - "{agent_root}/commons/journals/ocas-vesper/"
-    self_update:
-      source: "https://github.com/indigokarasu/vesper"
-      mechanism: "version-checked tarball from GitHub via gh CLI"
-      command: "vesper.update"
-      requires_binaries: [gh, tar, python3]
-    cron:
-      - name: "vesper:morning"
-        schedule: "10 13 * * *"
-        command: "vesper.morning"
-      - name: "vesper:evening"
-        schedule: "10 3 * * *"
-        command: "vesper.evening"
-      - name: "vesper:deliver-morning"
-        schedule: "40 13 * * *"
-        command: "python3 {agent_root}/skills/ocas-vesper/scripts/briefing_deliver.py"
-      - name: "vesper:deliver-evening"
-        schedule: "40 3 * * *"
-        command: "python3 {agent_root}/skills/ocas-vesper/scripts/briefing_deliver.py"
-      - name: "vesper:update"
-        schedule: "5 7 * * *"
-        command: "vesper.update"
+  version: 2.10.0
 ---
 
 # Vesper
