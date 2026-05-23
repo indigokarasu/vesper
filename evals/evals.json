@@ -1,0 +1,17 @@
+{
+  "skill": "ocas-vesper",
+  "version": "1.0.0",
+  "description": "Evaluation test cases for ocas-vesper",
+  "evals": [
+    {
+      "input": "Generate today's morning briefing",
+      "expected_output": "Aggregates signals from all skills and produces a daily briefing",
+      "description": "Briefing generation"
+    },
+    {
+      "input": "What are the top 3 things I should focus on today?",
+      "expected_output": "Returns prioritized action items based on system-wide signals",
+      "description": "Priority suggestions"
+    }
+  ]
+}
