@@ -1,15 +1,31 @@
 # 🌅 Vesper
 
-Vesper is the system's daily voice -- it aggregates signals from every other skill and presents what matters as a concise, conversational morning or evening briefing, surfacing concrete outcomes, upcoming decisions, and actionable opportunities without exposing any internal architecture or analysis processes. Its signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded, so every briefing earns attention rather than demanding it.
+> **Daily briefing generator — aggregates signals from all skills into concise morning and evening briefings.**
 
+## Why Vesper?
 
-Skill packages follow the [agentskills.io](https://agentskills.io/specification) open standard and are compatible with OpenClaw, Hermes Agent, and any agentskills.io-compliant client.
+When you have 26+ skills generating signals, you need someone to tell you what actually matters. Vesper aggregates signals from every skill — portfolio outcomes from Rally, insight proposals from Corvus, pending commitments from Dispatch, upcoming calendar events from Sands — and assembles them into a concise, conversational briefing. No internal architecture, no system terminology — just what you need to know.
 
----
+Skill packages follow the [agentskills.io](https://agentskills.io/specification) open standard and are compatible with OpenClaw, Hermes Agent, Claude, and any agentskills.io-compliant client.
 
-## Overview
+## Quick Start
 
-Vesper aggregates signals from every other skill -- portfolio outcomes from Rally, insight proposals from Corvus, pending commitments from Dispatch, upcoming calendar events -- and assembles them into a concise morning or evening briefing in natural language. Its signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded. The result is a briefing that earns attention rather than demanding it, with no internal architecture or system terminology visible to the reader. Vesper also presents pending decision requests with option, benefit, and cost framing -- but never nags about ignored decisions.
+```
+# Morning briefing
+"What's my morning briefing?"
+
+# Evening briefing
+"What's on tap for tomorrow?"
+
+# On-demand
+"Brief me now"
+```
+
+Vesper auto-initializes on first use, registering morning and evening cron jobs.
+
+## What It Does
+
+Vesper aggregates signals from every other skill and assembles them into morning or evening briefings in natural language. Signal filtering is strict: routine background activity, speculative observations, and already-experienced events are excluded. The result is a briefing that earns attention rather than demanding it. Vesper also presents pending decision requests with option, benefit, and cost framing.
 
 ## Commands
 
@@ -19,53 +35,38 @@ Vesper aggregates signals from every other skill -- portfolio outcomes from Rall
 | `vesper.briefing.evening` | Generate evening briefing |
 | `vesper.briefing.manual` | On-demand briefing |
 | `vesper.decisions.pending` | List unacted decision requests |
-| `vesper.config.set` | Update schedule, sections, delivery settings |
-| `vesper.status` | Last briefing time, pending decisions, schedule |
-| `vesper.journal` | Write journal for the current run |
-| `vesper.update` | Pull latest from GitHub source (preserves journals and data) |
-
-## Setup
-
-`vesper.init` runs automatically on first invocation and creates all required directories, config.json, and JSONL files. It also registers the `vesper:morning` cron job (daily 7am) and `vesper:evening` cron job (daily 6pm) and `vesper:update` (midnight daily, self-update). No manual setup is required.
+| `vesper.config.set` | Update schedule, sections, delivery |
+| `vesper.status` | Last briefing time, pending decisions |
+| `vesper.journal` | Write journal |
+| `vesper.update` | Self-update |
 
 ## Dependencies
 
-**OCAS Skills**
-- [Corvus](https://github.com/indigokarasu/corvus) -- sends InsightProposal files via Vesper journal payload
-- [Dispatch](https://github.com/indigokarasu/dispatch) -- may deliver briefings on request
-- [Rally](https://github.com/indigokarasu/rally) -- portfolio outcome signals for briefing content
-
-**External**
-- Calendar and Weather APIs (for briefing content)
+- [Corvus](https://github.com/indigokarasu/corvus) — receives InsightProposal files
+- [Dispatch](https://github.com/indigokarasu/dispatch) — may deliver briefings
+- [Rally](https://github.com/indigokarasu/rally) — portfolio outcome signals
+- [Sands](https://github.com/indigokarasu/sands) — calendar events
+- Calendar and Weather APIs
 
 ## Scheduled Tasks
 
-| Job | Mechanism | Schedule | Command |
-|---|---|---|---|
-| `vesper:morning` | cron | `0 7 * * *` (daily 7am) | Morning briefing generation |
-| `vesper:evening` | cron | `0 18 * * *` (daily 6pm) | Evening briefing generation |
-| `vesper:update` | cron | `0 0 * * *` (midnight daily) | Self-update from GitHub source |
+| Job | Schedule | Command |
+|---|---|---|
+| `vesper:morning` | `0 7 * * *` | Morning briefing |
+| `vesper:evening` | `0 18 * * *` | Evening briefing |
+| `vesper:update` | `0 0 * * *` | Self-update |
 
 ## Changelog
 
 ### v2.10.0 — April 26, 2026
-- Added `scripts/briefing_deliver.py` — Gmail-based briefing delivery (moved from `ocas-dispatch` per OCAS boundary discipline)
-- Added `scripts/check_briefing.py` — diagnostic utility to inspect the latest briefing file
-- Added `vesper.briefing.deliver` and `vesper.briefing.check` commands
+- Added briefing delivery and diagnostic scripts
 
 ### v2.8.4 — April 12, 2026
-- Document weather rendering (Fahrenheit param, WMO codes) and briefing HTML structure
+- Weather rendering and briefing HTML structure
 
-### v2.6.0 -- April 2, 2026
-- Structured entity observations in journal payloads (`entities_observed`, `relationships_observed`, `preferences_observed`)
-- `user_relevance` tagging on journal observations (`user` for calendar/task entities, `agent_only` for external news context)
-- Elephas journal cooperation in skill cooperation section
+### v2.0.0 — March 18, 2026
+- Initial release
 
-### v2.3.0 -- March 27, 2026
-- Added `vesper.update` command and midnight cron for automatic version-checked self-updates
-
-### v2.2.0 -- March 22, 2026
-- Routing improvements
 ---
 
-*Vesper is part of the [OCAS Agent Suite](https://github.com/indigokarasu) -- a collection of interconnected skills for personal intelligence, autonomous research, and continuous self-improvement. Each skill owns a narrow responsibility and communicates with others through structured signal files, shared journals, and Chronicle, a long-term knowledge graph that accumulates verified facts over time.*
+*Vesper is part of the [OCAS Agent Suite](https://github.com/indigokarasu).*
