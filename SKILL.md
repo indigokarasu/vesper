@@ -85,9 +85,10 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 
 ## Account Isolation (CRITICAL)
 
-- **owner's Google account**: `{agent_root}/google_token.json` (google-workspace-user). Use for calendar queries, inbox scanning, contact data.
-- **Indigo's Google account**: `~/.hermes-indigo/google_token.json` (mx.indigo.karasu@gmail.com). Use for sending briefing emails FROM Indigo TO owner.
-**Never read owner's Calendar or Inbox from Indigo's token.**
+- **owner's Google account**: Uses OAuth client `112292610034...` in owner's Google Cloud project. Credentials at `/root/.google_workspace_mcp/credentials/google-workspace-user.json`. Use for calendar queries, inbox scanning, contact data.
+- **Indigo's Google account**: Uses OAuth client `550801240087...` in Indigo's Google Cloud project. Credentials at `/root/.google_workspace_mcp/credentials/mx.indigo.karasu@gmail.com.json`. Use for sending briefing emails FROM Indigo TO owner.
+- **Standalone scripts**: All Python scripts use the central `google_auth` helper at `<hermes-root>/scripts/google_auth.py`. Import: `from google_auth import get_gmail_service, get_calendar_service, get_drive_service, get_service`. Each account uses its own OAuth client — never mix them.
+- **Never read owner's Calendar or Inbox from Indigo's token.**
 
 ## Ownership
 
@@ -211,6 +212,8 @@ After every briefing generation:
   signals_evaluated.jsonl
   decisions_presented.jsonl
   decisions.jsonl
+  intents.jsonl
+  evidence.jsonl
   briefings/
     YYYY-WXX/
       YYYY-MM-DD-morning.json
@@ -270,6 +273,16 @@ skill_okrs:
     direction: maximize
     target: 1.0
     evaluation_window: 30_runs
+  - name: schedule_adherence
+    metric: fraction of briefings generated within the configured schedule window
+    direction: maximize
+    target: 0.95
+    evaluation_window: 30_runs
+  - name: data_integrity
+    metric: fraction of briefing runs with zero dropped or malformed signals
+    direction: maximize
+    target: 0.99
+    evaluation_window: 30_runs
 ```
 
 ## Optional skill cooperation
@@ -303,7 +316,7 @@ On first invocation of any Vesper command, run `vesper.init`:
 
 1. Create `{agent_root}/commons/data/ocas-vesper/` and subdirectories (`briefings/`)
 2. Write default `config.json` with ConfigBase fields if absent
-3. Create empty JSONL files: `briefings.jsonl`, `signals_evaluated.jsonl`, `decisions_presented.jsonl`, `decisions.jsonl`
+3. Create empty JSONL files: `briefings.jsonl`, `signals_evaluated.jsonl`, `decisions_presented.jsonl`, `decisions.jsonl`, `intents.jsonl`, `evidence.jsonl`
 4. Create `{agent_root}/commons/journals/ocas-vesper/`
 5. Register cron jobs `vesper:morning`, `vesper:evening`, and `vesper:update` if not already present (check the platform scheduling registry first)
 6. Log initialization as a DecisionRecord in `decisions.jsonl`
@@ -379,3 +392,14 @@ This pulls the latest version from GitHub and restarts the skill's background ta
 ## Error handling
 
 On briefing delivery failure: see `references/delivery-troubleshooting.md` for trigger conditions, failure modes (SMTP, Gmail API, HTML rendering), and recovery steps.
+
+## Recovery Behavior
+
+When Vesper encounters a partial failure (e.g., unavailable upstream skill data, corrupted briefing file, or interrupted run), it follows the recovery protocol defined in `spec-ocas-recovery.md`. Key behaviors:
+
+- **Partial signal loss**: Vesper logs the gap via `vesper.journal` and generates the briefing with available data. Missing sections are omitted silently rather than surfaced as errors.
+- **Corrupted briefing file**: Vesper archives the corrupted file with a `.corrupted.{timestamp}` suffix and regenerates from available signals.
+- **Interrupted run**: On restart, Vesper checks `intents.jsonl` for incomplete entries (status `in_progress` with no corresponding `completed` or `failed` record). Incomplete entries are retried once; persistently failed entries are written to `evidence.jsonl` and skipped.
+- **Upsteam skill unavailability**: Vesper treats missing upstream data as a normal empty state. No error is raised. The affected briefing section is omitted.
+
+All recovery actions are logged to `evidence.jsonl` with the recovery action taken, triggering condition, and outcome.

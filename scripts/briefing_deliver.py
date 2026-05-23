@@ -16,18 +16,30 @@ from googleapiclient.discovery import build
 
 AGENT_ROOT = Path(os.environ.get('AGENT_ROOT', Path.home() / '.hermes'))
 VESPER_BRIEFINGS = AGENT_ROOT / 'commons/data/ocas-vesper/briefings'
-TOKEN_PATH = AGENT_ROOT / 'indigo_google_credentials.json'
 RECIPIENT = 'google-workspace-user'
 
+# Use MCP credentials directory
+CREDS_DIR = Path('/root/.google_workspace_mcp/credentials')
+TOKEN_PATH = CREDS_DIR / 'mx.indigo.karasu@gmail.com.json'
+
 def get_gmail_service():
+    """Get authenticated Gmail service using MCP credentials."""
+    import json
+    from google.oauth2.credentials import Credentials
+    from google.auth.transport.requests import Request
+    from googleapiclient.discovery import build as google_build
+    
     with open(TOKEN_PATH) as f:
         token_data = json.load(f)
     creds = Credentials.from_authorized_user_info(token_data)
     if creds.expired and creds.refresh_token:
         creds.refresh(Request())
-        with open(TOKEN_PATH, 'w') as f:
-            json.dump(json.loads(creds.to_json()), f)
-    return build('gmail', 'v1', credentials=creds)
+        try:
+            with open(TOKEN_PATH, 'w') as f:
+                json.dump(json.loads(creds.to_json()), f)
+        except PermissionError:
+            pass  # MCP manages token writes
+    return google_build('gmail', 'v1', credentials=creds)
 
 def send_email(service, to, subject, html_body, text_body):
     message = MIMEText(html_body, 'html')
