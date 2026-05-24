@@ -34,9 +34,9 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 
 ## Account Isolation (CRITICAL)
 
-- **owner's Google account**: Uses OAuth client `112292610034...` in owner's Google Cloud project. Credentials at `/root/.google_workspace_mcp/credentials/google-workspace-user.json`. Use for calendar queries, inbox scanning, contact data.
-- **Indigo's Google account**: Uses OAuth client `550801240087...` in Indigo's Google Cloud project. Credentials at `/root/.google_workspace_mcp/credentials/mx.indigo.karasu@gmail.com.json`. Use for sending briefing emails FROM Indigo TO owner.
-- **Standalone scripts**: All Python scripts use the central `google_auth` helper at `<hermes-root>/scripts/google_auth.py`. Import: `from google_auth import get_gmail_service, get_calendar_service, get_drive_service, get_service`. Each account uses its own OAuth client — never mix them.
+- **owner's Google account**: Credentials at the standard OAuth path. Use for calendar queries, inbox scanning, contact data.
+- **Indigo's Google account**: Credentials at the standard OAuth path. Use for sending briefing emails FROM Indigo TO owner.
+- **Standalone scripts**: All Python scripts use the central `google_auth` helper at `scripts/google_auth.py`. Each account uses its own OAuth client — never mix them.
 - **Never read owner's Calendar or Inbox from Indigo's token.**
 
 ## Ownership
@@ -315,6 +315,14 @@ Registration during `vesper.init`:
 ## Visibility
 
 public
+
+## Gotchas
+
+- **Account isolation is critical** — owner's token must NEVER be used to send briefings; Indigo's token sends emails TO owner. Reading owner's Calendar or Inbox from Indigo's token will fail or return wrong data.
+- **Upstream skill unavailability is silent** — If Corvus, Rally, Dispatch, or Calendar data is missing, Vesper omits the affected section entirely. No error is raised; the briefing simply has no Markets or Messages section that day.
+- **Signal filtering is strict** — Routine background activity, speculative observations, and already-experienced events are excluded. A signal that seems important to the generating skill may not survive Vesper's filter.
+- **Normal state is silence** — Vesper never confirms "all systems normal" or "no flags." If a section has no content worth surfacing, it is omitted entirely with no placeholder.
+- **Briefing files use ISO week directories** — Briefings are stored under `briefings/YYYY-WXX/` (e.g., `2026-W14/`). The week directory must be created if absent; Dispatch picks up undelivered briefings from this path.
 
 ## Support file map
 
