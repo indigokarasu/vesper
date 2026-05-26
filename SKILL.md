@@ -9,10 +9,28 @@ description: 'Vesper: daily briefing generator. Aggregates signals from across t
 
 '
 license: MIT
+source: https://github.com/indigokarasu/vesper
+includes:
+  - references/**
+  - scripts/**
+
 metadata:
   author: Indigo Karasu
   version: 2.10.0
 ---
+## When to Use
+
+- Daily briefing generation
+- Signal aggregation from all OCAS skills
+- Morning summary of calendar, email, and system status
+- End-of-day wrap-up and next-day preview
+- When any skill needs a synthesized daily overview
+## When NOT to Use
+
+- Real-time monitoring (use heartbeat)
+- Content generation or research
+- Calendar management (use Sands)
+- Email sending (use Dispatch)
 
 # Vesper
 
@@ -25,18 +43,27 @@ Vesper is the system's daily voice — it aggregates signals from every other sk
 - Check pending decision requests
 - Configure briefing schedule or sections
 
-## When not to use
+## When NOT to use
 
 - Deep research — use Sift
 - Pattern analysis — use Corvus
 - Message drafting — use Dispatch
 - Action execution — use relevant domain skill
 
-## Account Isolation (CRITICAL)
+## What this skill does not do
+
+- Signal generation (Corvus owns this)
+- Portfolio management (Rally)
+- Calendar management (Sands)
+- Communications delivery (Dispatch)
+- Research (Sift/Scout)
+- Action decisions (Praxis)
+
+## Account isolation
 
 See `references/account-credentials.md` for Google account isolation rules and OAuth credential configuration.
 
-## Ownership & Responsibility
+## Responsibility boundary
 
 Vesper owns briefing generation, signal aggregation, and decision presentation. It aggregates signals from Corvus, Rally, Sands, Dispatch, and Calendar into morning and evening briefings, then writes completed briefings to its `briefings/` directory for Dispatch to pick up and deliver.
 
@@ -52,7 +79,7 @@ Summary: Include actionable information, meaningful outcomes, plan-affecting cha
 
 Read `references/briefing_templates.md` for structure and examples, `references/html-templates.md` for HTML layout, and `references/weather-codes.md` for weather rendering.
 
-Key constraints (not covered by reference files):
+Key constraints:
 
 - No markdown syntax (#, **, ---) — plain text or minimal HTML suitable for Gmail
 - Conversational paragraphs, not bullet dumps
@@ -123,7 +150,7 @@ Vesper tracks five OKRs — signal precision, terminology compliance, decision f
 - **Calendar/Weather** — reads external context for briefing content
 - **Elephas** — journal entity observations consumed during Chronicle ingestion
 
-## Ontology types & Journal
+## Ontology types & journal
 
 Vesper observes entities during briefing aggregation (Entity/Person, Concept/Event, Place). Entity observations are recorded in journal outputs for downstream Chronicle ingestion. Read `references/journal.md` before `vesper.journal`.
 
@@ -172,7 +199,7 @@ public
 - **Normal state is silence** — Never confirms "all systems normal." Empty sections are omitted with no placeholder.
 - **Briefing files use ISO week directories** — Stored under `briefings/YYYY-WXX/`. Create the directory if absent.
 
-## Recovery Behavior
+## Recovery behavior
 
 When Vesper encounters a partial failure, it follows the recovery protocol in `spec-ocas-recovery.md`:
 
@@ -183,7 +210,7 @@ When Vesper encounters a partial failure, it follows the recovery protocol in `s
 
 All recovery actions logged to `evidence.jsonl`.
 
-## Support file map
+## Support File Map
 
 | File | When to read |
 |---|---|
