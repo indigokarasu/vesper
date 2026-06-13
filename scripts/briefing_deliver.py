@@ -19,7 +19,7 @@ VESPER_BRIEFINGS = AGENT_ROOT / 'commons/data/ocas-vesper/briefings'
 RECIPIENT = 'google-workspace-user'
 
 # Use MCP credentials directory
-CREDS_DIR = Path('/root/.google_workspace_mcp/credentials')
+CREDS_DIR = Path('/root/.google_Google services/credentials')
 TOKEN_PATH = CREDS_DIR / 'mx.indigo.karasu@gmail.com.json'
 
 def get_gmail_service():
