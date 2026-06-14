@@ -1,6 +1,9 @@
 ---
 name: ocas-vesper
-description: 'Daily briefing generator. Aggregates signals from across the system into concise morning and evening briefings. Surfaces outcomes, opportunities, and decisions in natural language without exposing internal processes. Do not use for deep research (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).'
+description: Daily briefing generator. Aggregates signals from across the system into
+  concise morning and evening briefings. Surfaces outcomes, opportunities, and decisions
+  in natural language without exposing internal processes. Do not use for deep research
+  (use Sift), pattern analysis (use Corvus), or message drafting (use Dispatch).
 license: MIT
 source: https://github.com/indigokarasu/vesper
 includes:
@@ -9,18 +12,6 @@ includes:
 metadata:
   author: Indigo Karasu (indigokarasu)
   version: 2.13.0
-tags:
-- briefing
-- daily
-- signals
-- aggregation
-- OCAS-core
-triggers:
-- daily briefing
-- morning briefing
-- evening briefing
-- signal aggregation
-- generate briefing
 ---
 ## Interactive Menu
 
@@ -220,7 +211,7 @@ public
 - **Corvus proposals.jsonl is a separate signal source** — In addition to individual `{proposal_id}.json` files in the Corvus proposals directory, Corvus also writes an aggregated `proposals.jsonl` file. This file can contain proposals that don't have individual `.json` files. During signal gathering, you MUST check both: (1) all individual `.json` files in the proposals directory, AND (2) the `proposals.jsonl` file. Parse each line of `proposals.jsonl` as a separate proposal. Cross-reference proposal IDs against `signals_evaluated.jsonl` to avoid reprocessing.
 - **read_file output is tool wrapping, not file contents** — The `read_file` tool wraps all output in `{"content": "N|line1\nN|line2"}` — this is a tool presentation layer, NOT the file's actual on-disk format. When verifying file structure (JSONL delimiters, CSV headers, encoding), use `terminal head -c 500 file` or `terminal head -3 file` to see raw bytes. The pipe-delimited `N|` prefixes you see in tool output do NOT exist in the actual file.
 - **Skill files live in two locations** — The git repo at `~/.hermes/skills/ocas-vesper/` is the update source. Sessions load from `~/.hermes/profiles/indigo/skills/ocas-vesper/`. After any `vesper.update`, the profile copy MUST be synced or the next session will run stale code. Always sync both `SKILL.md` and `references/` after pulling. See `references/update-procedure.md`.
-- **Editing briefings.jsonl with `patch` is dangerous** — `briefings.jsonl` uses `N|` line number prefixes on each line. The `patch` tool operates on raw file content. If you include the `N|` prefix in both old_string and new_string, you can accidentally create duplicate prefixes (e.g., `27|27|`). SAFE alternatives: (1) Use `terminal` + `sed -i 'Ns/^N|N|/|/'` for surgical single-line prefix fixes. (2) Use `terminal` + Python (`json.load` per line, modify, `json.dump` per line) for structured edits. (3) Use `write_file` to rewrite the entire file from a parsed representation. NEVER use `patch` with the `N|` prefix included in both old and new strings — the prefix duplicates and corrupts the line, making it unparseable.
+- **`patch` is unreliable after `read_file`** — `read_file` wraps output with `N|` line prefixes that don't exist in the actual file. If you read a file via `read_file` and then try `patch`, the old_string may never match. Use `terminal` + Python (`json.load`/`json.dump` per line) or `write_file` to rewrite. This applies to ALL files, not just JSONL. The `patch` tool operates on raw file content. If you include the `N|` prefix in both old_string and new_string, you can accidentally create duplicate prefixes (e.g., `27|27|`). SAFE alternatives: (1) Use `terminal` + `sed -i 'Ns/^N|N|/|/'` for surgical single-line prefix fixes. (2) Use `terminal` + Python (`json.load` per line, modify, `json.dump` per line) for structured edits. (3) Use `write_file` to rewrite the entire file from a parsed representation. NEVER use `patch` with the `N|` prefix included in both old and new strings — the prefix duplicates and corrupts the line, making it unparseable.
 - **Failed briefings may have no `content` field** — When a briefing fails during generation (e.g., OAuth expired before data could gather), the JSONL entry may contain only metadata (`briefing_id`, `type`, `date`, `sections`, `delivery_status`) with NO `content` field. During delivery checks, skip entries that lack a `content` string — there is nothing to deliver. Mark them as `delivery_status: "skipped"` with a reason of "No content — generation failed" to prevent re-checking. If `content` exists but is empty string (`""`), also skip — the briefing was intentionally suppressed.
 
 ## Recovery behavior
@@ -250,3 +241,4 @@ All recovery actions logged to `evidence.jsonl`.
 | `references/delivery-check-procedure.md` | During delivery check cron runs — checking briefings.jsonl for undelivered entries, fixing flag desyncs |
 | `references/okrs.md` | Before evaluating or reporting OKR metrics |
 | `references/update-procedure.md` | During `vesper.update` — conflict resolution and profile sync steps |
+| `references/cron-mode-operations.md` | During cron job execution — tool constraints (`execute_code` denied, `patch` unreliable on JSONL), briefing path conventions, JSONL write ordering |
