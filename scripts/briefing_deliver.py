@@ -20,7 +20,7 @@ RECIPIENT = os.environ.get('VESPER_OWNER_EMAIL', 'owner@example.com')
 
 # Use MCP credentials directory
 CREDS_DIR = Path('/root/.google_Google services/credentials')
-TOKEN_PATH = CREDS_DIR / 'mx.indigo.karasu@gmail.com.json'
+TOKEN_PATH = CREDS_DIR / (os.environ.get('VESPER_SENDER_EMAIL', 'owner@example.com') + '.json')
 
 def get_gmail_service():
     """Get authenticated Gmail service using MCP credentials."""
@@ -44,7 +44,7 @@ def get_gmail_service():
 def send_email(service, to, subject, html_body, text_body):
     message = MIMEText(html_body, 'html')
     message['to'] = to
-    message['from'] = 'mx.indigo.karasu@gmail.com'
+    message['from'] = os.environ.get('VESPER_SENDER_EMAIL', 'owner@example.com')
     message['subject'] = subject
     
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()

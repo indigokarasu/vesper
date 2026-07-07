@@ -98,7 +98,7 @@ html = "<p>" + content.replace("\n\n", "</p><p>").replace("\n", "<br>") + "</p>"
 ### Telegram (Fallback / Direct)
 
 ```bash
-hermes send --to telegram:8666597030 --quiet "[content field from briefing]"
+hermes send --to telegram:OWNER_CHAT_ID --quiet "[content field from briefing]"
 ```
 
 After sending, update the entry:
