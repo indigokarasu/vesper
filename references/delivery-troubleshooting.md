@@ -130,7 +130,7 @@ When a briefing was generated but not delivered through normal channels, deliver
 ### Sending via Telegram
 
 ```bash
-hermes send --to telegram:8666597030 --quiet "$(cat /path/to/YYYY-MM-DD-evening-content.txt)"
+hermes send --to telegram:OWNER_CHAT_ID --quiet "$(cat /path/to/YYYY-MM-DD-evening-content.txt)"
 ```
 
 ### Marking as Delivered After the Fact
