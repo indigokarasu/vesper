@@ -73,7 +73,7 @@
 - Briefing output format: plain text/HTML for Gmail rendering, no markdown syntax
 - Section markers: monochrome extended characters (▪ ✉ ⚑ ◈ ⟡ ⚙) replace color emoji headers
 - Weather: narrative format with emoji directly before condition words, includes 10am/4pm commute forecasts, Friday weekend forecast
-- Greeting: "Good morning" / "Good evening", no trailing punctuation
+- Greeting: "Good morning the owner" / "Good evening the owner", no trailing punctuation
 - Links: inline anchor text on relevant words (gcal, maps, gmail thread URIs), no trailing link labels
 - Markets: morning shows previous close with change, evening shows open-to-close with change
 - Silence on normal: empty sections omitted entirely, no "no flags" or normalcy confirmations

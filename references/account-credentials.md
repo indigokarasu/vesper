@@ -4,7 +4,7 @@ This file contains Google account isolation and OAuth credential details for the
 
 ## Account Isolation
 
-- **The owner's Google account**: Credentials at the standard OAuth path. Use for calendar queries, inbox scanning, contact data.
+- **the owner's Google account**: Credentials at the standard OAuth path. Use for calendar queries, inbox scanning, contact data.
 - **Indigo's Google account**: Credentials at the standard OAuth path. Use for sending briefing emails FROM Indigo TO the owner.
 - **Standalone scripts**: All Python scripts use the central `google_auth` helper at `scripts/google_auth.py`. Each account uses its own OAuth client — never mix them.
 - **Never read the owner's Calendar or Inbox from Indigo's token.**
@@ -23,7 +23,7 @@ Each account uses its own OAuth client with separate `client_id`, `client_secret
 
 ## Why This Matters
 
-Reading the owner's Calendar or Inbox from Indigo's token will fail or return wrong data. The owner's token must NEVER be used to send briefings; Indigo's token sends emails TO the owner.
+Reading the owner's Calendar or Inbox from Indigo's token will fail or return wrong data. the owner's token must NEVER be used to send briefings; Indigo's token sends emails TO the owner.
 
 ## Delivery Configuration — Use `local`, Not `origin`
 

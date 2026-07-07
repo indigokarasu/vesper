@@ -12,6 +12,7 @@
 - Events already experienced directly by the owner
 - Internal reasoning, system processes, or skill telemetry
 - Speculative or curiosity-only observations
+- System notifications that auto-resolve before the briefing is read (e.g., Cloudflare "82% of daily limit" alerts that reset at midnight — by the time the briefing reaches the user, the limit has already reset and no action is needed)
 
 ## Evening-Specific Exclusions
 - Past weather

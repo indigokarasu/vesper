@@ -7,7 +7,7 @@ Plain text or minimal HTML for Gmail rendering. No markdown syntax. Bold via `<b
 ## Morning briefing
 
 ```
-Good morning
+Good morning the owner
 
 58°F right now, ☁️ overcast, clearing to 63°F by 10am, ☀️ sunny.
 High of 74°F mid-afternoon, ☀️ sunny, 71°F at 4pm, 🌤 partly cloudy, dropping to a low of 55°F overnight.
@@ -43,8 +43,17 @@ In the rendered HTML version, these words become links:
 
 ## Evening briefing
 
+The ▪ Today section in evening briefings covers upcoming events, not just tomorrow. When tomorrow is empty but a later day has events, state tomorrow is quiet and name the day of the next event:
+
 ```
-Good evening
+▪ Tomorrow
+No calendar events tomorrow. Quiet Sunday.
+
+New patient visit with Sophie Patzek Monday at 8:45am.
+```
+
+```
+Good evening the owner
 
 ▪ Tomorrow
 Team standup at 9am (Zoom)
@@ -63,7 +72,7 @@ The contractor needs a go/no-go on the bathroom tile by Wednesday. Two options i
 
 ## Weather rules
 
-Greeting line: "Good morning" or "Good evening". No punctuation after the greeting.
+Greeting line: "Good morning the owner" or "Good evening the owner". No punctuation after the greeting.
 
 Weather appears only in morning briefings, immediately after the greeting.
 
