@@ -77,7 +77,7 @@ Key constraints:
 - Section headers: ▪ Today, ✉ Messages, ⚑ Logistics, ◈ Markets, ⟡ Decisions, ⚙ System
 - Sections with no content are omitted entirely — no "nothing to report" placeholders
 - Normal-state system health is silence — no "all clear" or "systems normal"
-- Opening: "Good morning owner" / "Good evening owner" (no punctuation after greeting)
+- Opening: "Good morning" / "Good evening" (no punctuation after greeting)
 - Markets: morning shows yesterday's close; evening shows open and close. Notable movers only when material.
 - Decision requests: option, benefit, cost — framed as optional
 - Links are inline with meaningful anchor text; see URI formats in reference files

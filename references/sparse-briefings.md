@@ -21,7 +21,7 @@ When most or all upstream signal sources are unavailable, the briefing will be t
 ## Example thin briefing
 
 ```
-Good morning owner
+Good morning
 
 52°F right now, 🌧 rain, warming to 58°F by 10am with clearing skies. High of 64°F mid-afternoon, ⛅ partly cloudy, 60°F at 4pm, 🌤 mainly clear, dropping to a low of 50°F overnight.
 
