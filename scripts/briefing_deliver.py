@@ -16,7 +16,7 @@ from googleapiclient.discovery import build
 
 AGENT_ROOT = Path(os.environ.get('AGENT_ROOT', Path.home() / '.hermes'))
 VESPER_BRIEFINGS = AGENT_ROOT / 'commons/data/ocas-vesper/briefings'
-RECIPIENT = 'google-workspace-user'
+RECIPIENT = os.environ.get('VESPER_OWNER_EMAIL', 'owner@example.com')
 
 # Use MCP credentials directory
 CREDS_DIR = Path('/root/.google_Google services/credentials')

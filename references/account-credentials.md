@@ -15,7 +15,7 @@ This file contains Google account isolation and OAuth credential details for the
 
 **Why**: The MCP server defaults to whichever OAuth client is configured as its primary — which may be Indigo's account. If `user_google_email` is omitted, the tool may silently return data from the wrong inbox/calendar, causing "email mixing" where the briefing contains emails from both owner's and Indigo's accounts.
 
-**Rule**: Every MCP tool call that accepts `user_google_email` MUST include it. For Vesper briefings, always use `user_google_email="google-workspace-user"` when reading email or calendar data.
+**Rule**: Every MCP tool call that accepts `user_google_email` MUST include it. For Vesper briefings, always use `user_google_email="owner@example.com"` when reading email or calendar data.
 
 ## OAuth Client Configuration
 
