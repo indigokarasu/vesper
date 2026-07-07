@@ -5,7 +5,7 @@ Minimal HTML suitable for Gmail rendering. No markdown syntax.
 ## Morning / Evening Briefing Structure
 
 ```html
-<p>Good morning</p>
+<p>Good morning the owner</p>
 <p style="font-size: 15px;">{weather_emoji} {temp}°F. {10am_emoji} {10am_temp}°F by 10am. High of {high}°F, {4pm_emoji} {4pm_temp}°F at 4pm, dropping to {overnight_temp}°F overnight.</p>
 <!-- Weather line appears in MORNING briefings only -->
 <p><strong>▪ Today/Tomorrow</strong></p>
@@ -18,7 +18,7 @@ Minimal HTML suitable for Gmail rendering. No markdown syntax.
 <p>{Pending items}</p>
 ```
 
-Evening briefings use `<p>Good evening</p>` and omit the weather line.
+Evening briefings use `<p>Good evening the owner</p>` and omit the weather line.
 
 ## Rendering Notes
 
