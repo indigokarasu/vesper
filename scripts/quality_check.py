@@ -17,6 +17,11 @@ import json
 import re
 import sys
 
+_HELP_ARGS = {"--help", "-h"}
+if set(sys.argv[1:]) & _HELP_ARGS:
+    print((__doc__ or "").strip() or "Usage: python3 quality_check.py <path-to-briefing.json>")
+    sys.exit(0)
+
 
 def load_briefing(path):
     with open(path) as f:

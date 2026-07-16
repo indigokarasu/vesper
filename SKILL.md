@@ -17,6 +17,13 @@ triggers:
 metadata:
   author: Indigo Karasu (indigokarasu)
   version: 2.13.0
+  hermes:
+    category: productivity
+    tags:
+    - daily-briefing
+    - aggregation
+    - natural-language
+    - OCAS-core
 ---
 ## Interactive Menu
 
@@ -110,12 +117,12 @@ Key constraints:
 
 ## Run completion
 
-0. **Apply Vibes rules** — Apply voice rules from SOUL.md directly (no em dashes, no "the user", no meta-narration, no "Now I have…"). **Do NOT load ocas-vibes via skill_view** — its rules are already embedded in SOUL.md/AGENTS.md.
-1. Read InsightProposal files from Custodian `proposals/` directory. Apply signal filtering. Track consumed `proposal_id` values in `signals_evaluated.jsonl` to avoid reprocessing. Read Dispatch summary and Rally daily report if present. For parallel signal gathering, `delegate_task` works for calendar queries but subagent Gmail OAuth may fail independently — always have a direct fallback.
-2. Write briefing file to `{agent_root}/commons/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` using `VesperBriefingFile` schema. Create week directory if absent. **Path is non-negotiable** — the schema `briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` is the delivery contract. If user instructions specify a different path (e.g., `morning/` or `evening/`), follow the schema for the canonical location AND save a copy to the requested path. The copy and the canonical file must be identical at write time; only delivery tracking (via `briefings.jsonl`) applies to the canonical path. Note the divergence in the journal.
-3. **Briefing quality check**: Re-read the generated briefing file and verify: (a) no internal system terminology leaked through (no skill IDs, database references, or technical jargon — use **whole-word matching**, not substring matching, to avoid false positives like "DB" matching inside "Handbuilding"), (b) all included sections have actual content — no empty sections, (c) the greeting matches the time-of-day format, (d) `signals_evaluated.jsonl` was updated with all consumed proposal IDs, and (e) every decision item traces to a real upstream signal — no fabricated or template-copied decisions. If any check fails, regenerate the briefing before marking the run complete. **Tip:** Run `python3 scripts/quality_check.py <briefing-file.json> [signals-evaluated.jsonl]` for automated validation — it implements all five sub-checks with whole-word regex matching.
-4. **Only after the briefing passes quality check**, persist the completed briefing record to `briefings.jsonl` and evaluated signals to `signals_evaluated.jsonl`. Log material decisions to `decisions.jsonl`. (Do not append these files before the quality check succeeds — the JSONL is the delivery contract and must match the final briefing exactly.)
-5. Write journal via `vesper.journal`.
+- [ ] **Apply Vibes rules** — Apply voice rules from SOUL.md directly (no em dashes, no "the user", no meta-narration, no "Now I have…"). **Do NOT load ocas-vibes via skill_view** — its rules are already embedded in SOUL.md/AGENTS.md.
+- [ ] Read InsightProposal files from Custodian `proposals/` directory. Apply signal filtering. Track consumed `proposal_id` values in `signals_evaluated.jsonl` to avoid reprocessing. Read Dispatch summary and Rally daily report if present. For parallel signal gathering, `delegate_task` works for calendar queries but subagent Gmail OAuth may fail independently — always have a direct fallback.
+- [ ] Write briefing file to `{agent_root}/commons/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` using `VesperBriefingFile` schema. Create week directory if absent. **Path is non-negotiable** — the schema `briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` is the delivery contract. If user instructions specify a different path (e.g., `morning/` or `evening/`), follow the schema for the canonical location AND save a copy to the requested path. The copy and the canonical file must be identical at write time; only delivery tracking (via `briefings.jsonl`) applies to the canonical path. Note the divergence in the journal.
+- [ ] **Briefing quality check**: Re-read the generated briefing file and verify: (a) no internal system terminology leaked through (no skill IDs, database references, or technical jargon — use **whole-word matching**, not substring matching, to avoid false positives like "DB" matching inside "Handbuilding"), (b) all included sections have actual content — no empty sections, (c) the greeting matches the time-of-day format, (d) `signals_evaluated.jsonl` was updated with all consumed proposal IDs, and (e) every decision item traces to a real upstream signal — no fabricated or template-copied decisions. If any check fails, regenerate the briefing before marking the run complete. **Tip:** Run `python3 scripts/quality_check.py <briefing-file.json> [signals-evaluated.jsonl]` for automated validation — it implements all five sub-checks with whole-word regex matching.
+- [ ] **Only after the briefing passes quality check**, persist the completed briefing record to `briefings.jsonl` and evaluated signals to `signals_evaluated.jsonl`. Log material decisions to `decisions.jsonl`. (Do not append these files before the quality check succeeds — the JSONL is the delivery contract and must match the final briefing exactly.)
+- [ ] Write journal via `vesper.journal`.
 
 ## Inter-skill interfaces
 
@@ -158,10 +165,10 @@ Each entity observation includes a `user_relevance` field: `user`, `agent_only`,
 ## Initialization
 
 On first invocation, run `vesper.init`:
-1. Create data directories (including `briefings/`)
-2. Write default `config.json` if absent
-3. Create empty JSONL files
-4. Create journal directory
+- [ ] Create data directories (including `briefings/`)
+- [ ] Write default `config.json` if absent
+- [ ] Create empty JSONL files
+- [ ] Create journal directory
 5. Register cron jobs `vesper:morning`, `vesper:evening`, `vesper:update` if not already present
 6. Log initialization as a DecisionRecord in `decisions.jsonl`
 

@@ -1,5 +1,12 @@
 import json, datetime, os, glob
+import sys
 from pathlib import Path
+
+_HELP_ARGS = {"--help", "-h"}
+if set(sys.argv[1:]) & _HELP_ARGS:
+    print((__doc__ or "").strip() or "Usage: python3 check_briefing.py")
+    sys.exit(0)
+
 
 AGENT_ROOT = Path(os.environ.get("AGENT_ROOT", Path.home() / ".hermes"))
 

@@ -6,9 +6,15 @@ Reads undelivered Vesper briefings and emails them via Indigo's Gmail.
 import json
 import os
 import base64
+import sys
 from datetime import datetime
 from email.mime.text import MIMEText
 from pathlib import Path
+
+_HELP_ARGS = {"--help", "-h"}
+if set(sys.argv[1:]) & _HELP_ARGS:
+    print((__doc__ or "").strip() or "Usage: python3 briefing_deliver.py")
+    sys.exit(0)
 
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
