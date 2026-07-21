@@ -1,7 +1,7 @@
 # vesper
 
 <p align="center">
-<img src="./assets/readme/hero.svg" width="100%" alt="Vesper: daily briefing generator — aggregates signals from all skills into concise morning and evening briefings.">
+<img src="./assets/readme/hero.jpg" width="100%" alt="Vesper: daily briefing generator — aggregates signals from all skills into concise morning and evening briefings.">
 </p>
 
 vesper — Vesper: daily briefing generator — aggregates signals from all skills into concise morning and evening briefings.
