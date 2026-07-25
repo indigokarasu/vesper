@@ -212,7 +212,7 @@ The `read_file` tool prepends `N|` line numbers to each line of output. When rea
 
 1. **Use `terminal` + `cat`** to read the file without line number prefixes:
    ```bash
-   cat <hermes-root>/commons/data/ocas-vesper/briefings.jsonl
+   cat <hermes-home>/commons/data/ocas-vesper/briefings.jsonl
    ```
 2. **Or strip prefixes in Python**: Split on newlines, find the first `|` on each line, and parse only the portion after it.
 

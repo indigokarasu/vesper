@@ -8,7 +8,7 @@ When `briefings.jsonl` has a corrupted entry, you'll get `json.decoder.JSONDecod
 
 ```python
 import json
-with open('<hermes-root>/commons/data/ocas-vesper/briefings.jsonl', 'r') as f:
+with open('<hermes-home>/commons/data/ocas-vesper/briefings.jsonl', 'r') as f:
     for i, line in enumerate(f, 1):
         line = line.strip()
         if not line: continue
@@ -55,7 +55,7 @@ json.loads(fixed)  # Should not raise
 ### Step 4: Write back
 
 ```python
-with open('<hermes-root>/commons/data/ocas-vesper/briefings.jsonl', 'w') as f:
+with open('<hermes-home>/commons/data/ocas-vesper/briefings.jsonl', 'w') as f:
     for line in fixed_lines:
         f.write(line + '\n')
 ```
