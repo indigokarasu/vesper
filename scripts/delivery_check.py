@@ -38,7 +38,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
-DATA = "~/.hermes/commons/data/ocas-vesper"
+DATA = os.path.expanduser("~/.hermes/commons/data/ocas-vesper")
 BRIEF_DIR = os.path.join(DATA, "briefings")
 JSONL = os.path.join(DATA, "briefings.jsonl")
 
