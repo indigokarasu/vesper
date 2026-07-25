@@ -37,4 +37,3 @@ On CLI, choices are navigable with arrow keys. On messaging platforms, choices r
 
 
 Vesper is the system's daily voice — it aggregates signals from every other skill and presents what matters as a concise, conversational morning or evening briefing, surfacing concrete outcomes, upcoming decisions, and actionable opportunities without exposing any internal architecture or analysis processes.
-
