@@ -19,7 +19,7 @@ Two locations must be scanned — briefings live in both:
 import json, glob
 
 # Scan individual files
-for path in glob.glob('<hermes-root>/commons/data/ocas-vesper/briefings/*/*.json'):
+for path in glob.glob('<hermes-home>/commons/data/ocas-vesper/briefings/*/*.json'):
     d = json.load(open(path))
     delivered = d.get('delivered')
     ds = d.get('delivery_status', {})
@@ -36,11 +36,11 @@ for path in glob.glob('<hermes-root>/commons/data/ocas-vesper/briefings/*/*.json
 Quick grep checks (catch common forms but may miss object-form pending):
 ```bash
 # Individual files — boolean false
-grep -rl '"delivered": false' <hermes-root>/commons/data/ocas-vesper/briefings/*/
+grep -rl '"delivered": false' <hermes-home>/commons/data/ocas-vesper/briefings/*/
 # Individual files — string pending
-grep -rl '"delivery_status": *"pending"' <hermes-root>/commons/data/ocas-vesper/briefings/*/
+grep -rl '"delivery_status": *"pending"' <hermes-home>/commons/data/ocas-vesper/briefings/*/
 # Individual files — JSON null delivered
-grep -rl '"delivered": *null' <hermes-root>/commons/data/ocas-vesper/briefings/*/
+grep -rl '"delivered": *null' <hermes-home>/commons/data/ocas-vesper/briefings/*/
 ```
 
 ### Reading JSONL Safely
@@ -174,7 +174,7 @@ find / -name "__main__.py" -path "*workspace*" 2>/dev/null  # returns nothing
 
 **Fix:** Reinstall the package into the venv referenced by the entrypoint binary, then verify.
 
-**Workaround:** Deliver via Telegram (see above). Note: OAuth credentials may still be valid even when the package is missing — check `/root/.google_workspace_mcp/credentials/` for token freshness before assuming auth is also broken.
+**Workaround:** Deliver via Telegram (see above). Note: OAuth credentials may still be valid even when the package is missing — check `<gworkspace-creds>/credentials/` for token freshness before assuming auth is also broken.
 
 ### Telegram (Fallback / Direct)
 

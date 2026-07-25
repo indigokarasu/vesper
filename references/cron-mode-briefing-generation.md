@@ -14,9 +14,9 @@ This reference documents the complete workflow for generating a Vesper briefing 
 **Critical**: In cron mode, relative paths in `read_file` may resolve incorrectly (the tool prepends the profile path). Always use absolute paths:
 
 ```
-<hermes-home>/skills/ocas-vesper/references/<file>.md
-<hermes-root>/commons/data/ocas-vesper/briefings/YYYY-WXX/<file>.json
-<hermes-root>/commons/data/ocas-vesper/<file>.jsonl
+<hermes-home>/profiles/indigo/skills/ocas-vesper/references/<file>.md
+<hermes-home>/commons/data/ocas-vesper/briefings/YYYY-WXX/<file>.json
+<hermes-home>/commons/data/ocas-vesper/<file>.jsonl
 ```
 
 If `read_file` fails with "File not found" on a path you expect to exist, use `terminal` + `find` to locate the actual file.
@@ -74,7 +74,7 @@ Do NOT pass the signals_evaluated path unless you've already appended to it (whi
     ...
     'sections': [...]
   }
-  with open('<hermes-root>/commons/data/ocas-vesper/briefings.jsonl', 'a') as f:
+  with open('<hermes-home>/commons/data/ocas-vesper/briefings.jsonl', 'a') as f:
       json.dump(record, f, ensure_ascii=False)
       f.write('\n')
   "

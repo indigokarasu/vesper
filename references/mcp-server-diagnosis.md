@@ -22,7 +22,7 @@ config.yaml → command: workspace-mcp-fixed
   → /usr/local/bin/workspace-mcp-fixed
     → exec /usr/local/bin/workspace-mcp "$@"
       → /usr/local/bin/workspace-mcp
-        → exec <hermes-install>/.venv/bin/python -m main "$@"
+        → exec <hermes-venv>/bin/python -m main "$@"
 ```
 
 **To diagnose:**
@@ -35,10 +35,10 @@ cat /usr/local/bin/workspace-mcp-fixed
 cat /usr/local/bin/workspace-mcp
 
 # 3. Check if the entrypoint module exists
-<hermes-install>/.venv/bin/python -c "import main"  # Should succeed if installed
+<hermes-venv>/bin/python -c "import main"  # Should succeed if installed
 
 # 4. Check if the mcp SDK is installed
-<hermes-install>/.venv/bin/python -c "import mcp; print('OK')"
+<hermes-venv>/bin/python -c "import mcp; print('OK')"
 ```
 
 ## Handling in Cron Sessions
