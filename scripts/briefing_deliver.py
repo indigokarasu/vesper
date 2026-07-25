@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Dispatch Briefing Delivery Script
-Reads undelivered Vesper briefings and emails them via Indigo's Gmail.
+Reads undelivered Vesper briefings and emails them via the agent's Gmail.
 """
 import json
 import os
@@ -25,7 +25,7 @@ VESPER_BRIEFINGS = AGENT_ROOT / 'commons/data/ocas-vesper/briefings'
 RECIPIENT = os.environ.get('VESPER_OWNER_EMAIL', 'owner@example.com')
 
 # Use MCP credentials directory
-CREDS_DIR = Path('/root/.google_Google services/credentials')
+CREDS_DIR = Path('<creds-dir>/credentials')
 TOKEN_PATH = CREDS_DIR / (os.environ.get('VESPER_SENDER_EMAIL', 'owner@example.com') + '.json')
 
 def get_gmail_service():
