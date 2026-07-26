@@ -8,11 +8,7 @@ When `briefings.jsonl` has a corrupted entry, you'll get `json.decoder.JSONDecod
 
 ```python
 import json
-<<<<<<< Updated upstream
 with open('<hermes-home>/commons/data/ocas-vesper/briefings.jsonl', 'r') as f:
-=======
-with open('~/.hermes/commons/data/ocas-vesper/briefings.jsonl', 'r') as f:
->>>>>>> Stashed changes
     for i, line in enumerate(f, 1):
         line = line.strip()
         if not line: continue
@@ -59,11 +55,7 @@ json.loads(fixed)  # Should not raise
 ### Step 4: Write back
 
 ```python
-<<<<<<< Updated upstream
 with open('<hermes-home>/commons/data/ocas-vesper/briefings.jsonl', 'w') as f:
-=======
-with open('~/.hermes/commons/data/ocas-vesper/briefings.jsonl', 'w') as f:
->>>>>>> Stashed changes
     for line in fixed_lines:
         f.write(line + '\n')
 ```

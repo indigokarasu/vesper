@@ -19,11 +19,7 @@ Two locations must be scanned — briefings live in both:
 import json, glob
 
 # Scan individual files
-<<<<<<< Updated upstream
 for path in glob.glob('<hermes-home>/commons/data/ocas-vesper/briefings/*/*.json'):
-=======
-for path in glob.glob('~/.hermes/commons/data/ocas-vesper/briefings/*/*.json'):
->>>>>>> Stashed changes
     d = json.load(open(path))
     delivered = d.get('delivered')
     ds = d.get('delivery_status', {})
@@ -40,19 +36,11 @@ for path in glob.glob('~/.hermes/commons/data/ocas-vesper/briefings/*/*.json'):
 Quick grep checks (catch common forms but may miss object-form pending):
 ```bash
 # Individual files — boolean false
-<<<<<<< Updated upstream
 grep -rl '"delivered": false' <hermes-home>/commons/data/ocas-vesper/briefings/*/
 # Individual files — string pending
 grep -rl '"delivery_status": *"pending"' <hermes-home>/commons/data/ocas-vesper/briefings/*/
 # Individual files — JSON null delivered
 grep -rl '"delivered": *null' <hermes-home>/commons/data/ocas-vesper/briefings/*/
-=======
-grep -rl '"delivered": false' ~/.hermes/commons/data/ocas-vesper/briefings/*/
-# Individual files — string pending
-grep -rl '"delivery_status": *"pending"' ~/.hermes/commons/data/ocas-vesper/briefings/*/
-# Individual files — JSON null delivered
-grep -rl '"delivered": *null' ~/.hermes/commons/data/ocas-vesper/briefings/*/
->>>>>>> Stashed changes
 ```
 
 ### Reading JSONL Safely
