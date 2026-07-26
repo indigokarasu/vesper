@@ -8,11 +8,7 @@ Daily briefing generator. Aggregates signals from across the system into
 **Version:** 2.13.0
 **Type:** 
 **Layer:** productivity
-<<<<<<< Updated upstream
-**Author:** Indigo Karasu
-=======
 **Author:** <agent-name>
->>>>>>> Stashed changes
 
 ---
 
