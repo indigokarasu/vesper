@@ -16,7 +16,7 @@ triggers:
 - status summary
 metadata:
   author: Indigo Karasu (indigokarasu)
-  version: 2.13.0
+  version: "2.14.0"
   hermes:
     category: productivity
     tags:
@@ -131,6 +131,14 @@ Key constraints:
 **Dispatch → Vesper:** Dispatch writes `DispatchSummaryReport` to `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json`. Vesper uses this for the Messages section.
 
 **Rally → Vesper:** Rally writes daily portfolio reports to `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper uses this for the Markets section.
+
+**Schedule/venue intake polling (per `spec-ocas-suite-cross-skill-updates.md`):** Vesper polls the following intake directories during briefing generation and merges their briefs into the schedule / agenda sections:
+- **Sands → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (daily schedule briefs)
+- **Voyage → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (travel schedule briefs)
+- **Spot → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (appointment-confirmation briefs)
+- **Taste → Vesper** — recommendation highlights (read from `{agent_root}/commons/data/ocas-taste/recommendations/` or `intake/`), surfaced as a preference-aware Recommendations section.
+
+Consumed briefs are cleaned from the intake dir after merge (Vesper owns intake cleanup). If an intake source wrote no brief, omit that section gracefully — never fail the briefing.
 
 **Vesper → Dispatch:** Vesper writes completed briefings to its `briefings/` directory. Dispatch picks them up for delivery. See `references/schemas.md` VesperBriefingFile.
 

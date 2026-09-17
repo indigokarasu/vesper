@@ -1,5 +1,11 @@
 ## [2.10.0] - 2026-04-26
 
+## [2.14.0] - 2026-09-16
+
+### Added
+- **Intake polling** — Vesper polls the shared Vesper intake dir for Sands / Voyage / Spot schedule & appointment briefs, and Taste recommendation highlights, merging them into the briefing agenda; consumed briefs cleaned after merge, sections omitted gracefully when absent.
+
+
 ### Added
 - `scripts/briefing_deliver.py` — Gmail-based briefing delivery (moved from `ocas-dispatch` per OCAS boundary discipline; briefing delivery is Vesper's responsibility, not Dispatch's)
 - `scripts/check_briefing.py` — diagnostic utility to inspect the latest briefing file
