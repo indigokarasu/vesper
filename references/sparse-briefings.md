@@ -21,7 +21,7 @@ When most or all upstream signal sources are unavailable, the briefing will be t
 ## Example thin briefing
 
 ```
-Good morning the owner
+Good morning
 
 52°F right now, 🌧 rain, warming to 58°F by 10am with clearing skies. High of 64°F mid-afternoon, ⛅ partly cloudy, 60°F at 4pm, 🌤 mainly clear, dropping to a low of 50°F overnight.
 
@@ -41,7 +41,7 @@ When the only available signal is a routine email (shipment notification, market
 
 Example minimal evening briefing:
 ```
-Good evening the owner
+Good evening
 
 ✉ Messages
 Amazon shipped your Cat6 patch cable order — two packs, $39.62 total. Arriving overnight tomorrow, delivery window 7 to 11 AM. No action needed, just flagging so you know it's coming.
@@ -74,7 +74,7 @@ When the only available signal is weather (common on weekends or quiet mornings)
   "date": "2026-06-28",
   "week": "2026-W26",
   "generated_at": "2026-06-28T06:00:00-07:00",
-  "content": "Good morning the owner\n\n50°F right now, ☀️ clear. Warming to 68°F by 10am, ☀️ sunny. High of 76°F mid-afternoon, ☀️ sunny, holding around 75°F through 4pm. Low near 50°F overnight. Tomorrow looks just as good — ☀️ clear, high of 77°F, low around 53°F.",
+  "content": "Good morning\n\n50°F right now, ☀️ clear. Warming to 68°F by 10am, ☀️ sunny. High of 76°F mid-afternoon, ☀️ sunny, holding around 75°F through 4pm. Low near 50°F overnight. Tomorrow looks just as good — ☀️ clear, high of 77°F, low around 53°F.",
   "delivery_status": "pending",
   "delivered": false,
   "sections": []

@@ -28,7 +28,7 @@ For faster briefing generation, fetch signals from multiple sources in parallel 
 When only email signals are available (no calendar events, no Custodian/Dispatch/Rally):
 
 ```
-Good morning the owner
+Good morning
 
 54°F right now, ☁️ overcast. Climbing to 59°F by 10am, still ☁️ overcast.
 High of 67°F mid-afternoon, ☁️ overcast, then ⛅ partly cloudy around 4pm

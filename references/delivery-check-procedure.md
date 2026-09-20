@@ -188,7 +188,7 @@ For full briefings, prepend the subject line as the first line of the message:
 ```
 Evening Briefing — June 28
 
-Good evening the owner
+Good evening
 ...
 ```
 
@@ -196,7 +196,7 @@ For stale briefings (e.g. a morning briefing delivered in the evening), add "(de
 ```
 Morning Briefing — June 28 (delayed delivery)
 
-Good morning the owner
+Good morning
 ...
 ```
 

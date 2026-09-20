@@ -38,7 +38,7 @@ Subagent Gmail OAuth may fail — always have a direct fallback in the parent se
 **Must include `content` field** — The VesperBriefingFile schema requires `content` (rendered plain-text briefing). The quality check's `check_greeting` reads this field. Without it, the check fails.
 
 Build `content` as a plain-text string with:
-- Greeting as first line ("Good morning the owner" / "Good evening the owner", no punctuation after)
+- Greeting as first line ("Good morning" / "Good evening", no punctuation after)
 - Weather paragraph (morning only)
 - Section markers (▪ ✉ ⚑ ◈ ⟡ ⚙) followed by content
 - Double newline between sections
