@@ -132,7 +132,7 @@ Key constraints:
 
 **Rally → Vesper:** Rally writes daily portfolio reports to `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper uses this for the Markets section.
 
-**Schedule/venue intake polling (per `spec-ocas-suite-cross-skill-updates.md`):** Vesper polls the following intake directories during briefing generation and merges their briefs into the schedule / agenda sections:
+**Schedule/venue intake polling (per [[`spec-ocas-suite-cross-skill-updates.md` ⚠️ Pending spec] ⚠️ Pending spec — not yet authored]):** Vesper polls the following intake directories during briefing generation and merges their briefs into the schedule / agenda sections:
 - **Sands → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (daily schedule briefs)
 - **Voyage → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (travel schedule briefs)
 - **Spot → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (appointment-confirmation briefs)
@@ -289,3 +289,7 @@ All recovery actions logged to `evidence.jsonl`.
 | `references/jsonl-debug.md` | When briefings.jsonl has corrupted entries — diagnosis and repair of bracket mismatches |
 | `scripts/quality_check.py` | After generating a briefing file — automated validation. Run with absolute path: `python3 ~/.hermes/profiles/indigo/skills/ocas-vesper/scripts/quality_check.py <briefing.json>`. Returns `PASS` or `FAIL` with specific terms/sctions that need fixing. |
 | `scripts/delivery_check.py` | During delivery-check cron runs — scans individual files + `briefings.jsonl` for undelivered briefings (applies the dual delivery-flag/desync rules), and with `--deliver` sends via the Telegram fallback when the email MCP is unavailable, then updates both records with a surgical line edit (preserves corrupted sibling JSONL lines byte-for-byte). Run `python3 ~/.hermes/profiles/indigo/skills/ocas-vesper/scripts/delivery_check.py --type morning --deliver`. |
+
+## Support Files
+
+- `scripts/update.sh` — Wrapper to update ocas-vesper
