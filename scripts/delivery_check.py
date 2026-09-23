@@ -20,18 +20,9 @@ import argparse
 import json
 import os
 import sys
-import base64
-from datetime import datetime, timezone, timedelta
-from email.mime.text import MIMEText
-from email.header import Header
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-
-# Import the proper vesper email template renderer
-sys.path.insert(0, "~/.hermes/profiles/indigo/commons/email-templates")
-from send_email import render_vesper_template
+# Third-party imports are deferred to function scope so --help works even when
+# google-auth / google-api-python-client are not installed (D9 compliance).
 
 DATA = os.path.expanduser("~/.hermes/commons/data/ocas-vesper")
 BRIEF_DIR = os.path.join(DATA, "briefings")
@@ -73,6 +64,7 @@ def has_content(rec):
 
 
 def scan_individual(btype, max_days=MAX_AGE_DAYS):
+    from datetime import datetime, timedelta
     out = []
     if not os.path.isdir(BRIEF_DIR):
         return out
@@ -138,6 +130,7 @@ def scan_jsonl(btype):
 
 
 def stamp():
+    from datetime import datetime, timezone
     return datetime.now(timezone.utc).isoformat()
 
 
@@ -198,6 +191,18 @@ def mark_delivered_jsonl(date, btype, ts):
 
 
 def deliver_email(rec):
+    """Send a briefing via Gmail API. Returns (ok, id_or_error)."""
+    from email.mime.text import MIMEText
+    from email.header import Header
+    import base64
+    # Lazy import so --help works without google libs
+    from google.oauth2.credentials import Credentials
+    from google.auth.transport.requests import Request
+    from googleapiclient.discovery import build
+    # Local template module (lazy so --help works without it)
+    sys.path.insert(0, "~/.hermes/profiles/indigo/commons/email-templates")
+    from send_email import render_vesper_template
+
     date = rec.get("date")
     bt = rec.get("type", "briefing")
     label = bt.capitalize() if bt in ("morning", "evening") else "Briefing"

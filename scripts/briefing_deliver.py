@@ -14,11 +14,16 @@ from pathlib import Path
 _HELP_ARGS = {"--help", "-h"}
 if set(sys.argv[1:]) & _HELP_ARGS:
     print((__doc__ or "").strip() or "Usage: python3 briefing_deliver.py")
+    print("\nFlags:")
+    print("  --help, -h  Show this help message and exit.")
+    print("\nEnv vars:")
+    print("  AGENT_ROOT           Hermes agent root (default: ~/.hermes)")
+    print("  VESPER_OWNER_EMAIL   Recipient email address")
+    print("  VESPER_SENDER_EMAIL  Sender email address (for credential lookup)")
     sys.exit(0)
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
+# Third-party imports are deferred so --help works even when google-auth /
+# google-api-python-client are not installed (D9 compliance).
 
 AGENT_ROOT = Path(os.environ.get('AGENT_ROOT', Path.home() / '.hermes'))
 VESPER_BRIEFINGS = AGENT_ROOT / 'commons/data/ocas-vesper/briefings'
@@ -30,10 +35,10 @@ TOKEN_PATH = CREDS_DIR / (os.environ.get('VESPER_SENDER_EMAIL', 'owner@example.c
 
 def get_gmail_service():
     """Get authenticated Gmail service using MCP credentials."""
-    import json
     from google.oauth2.credentials import Credentials
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build as google_build
+    import json
     
     with open(TOKEN_PATH) as f:
         token_data = json.load(f)
