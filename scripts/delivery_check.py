@@ -52,7 +52,9 @@ def _env_file_value(key):
 
 def is_undelivered(rec):
     ds = rec.get("delivery_status", None)
-    if isinstance(ds, str) and ds == "silent":
+    # silent = intentionally not delivered; skipped_stale = swept by the sender's
+    # freshness guard (never sent late) — both terminal, never "undelivered".
+    if isinstance(ds, str) and ds in ("silent", "skipped_stale"):
         return False
     if isinstance(ds, dict) and ds.get("status") == "silent":
         return False

@@ -101,7 +101,7 @@ Key constraints:
 - `vesper.briefing.morning` — generate morning briefing
 - `vesper.briefing.evening` — generate evening briefing
 - `vesper.briefing.manual` — on-demand briefing
-- `vesper.briefing.deliver` — deliver undelivered briefings via email using `mcp_google_workspace_send_gmail_message` (NOT `briefing_deliver.py` which is broken). Scan individual briefing files for non-delivered status, convert content to HTML, send via MCP, update both the individual file and `briefings.jsonl` on success. In cron sessions where the email MCP is unavailable, `python3 scripts/delivery_check.py --type <morning|evening|all> --deliver` performs the same scan, delivers via the Telegram fallback, and updates both records — see Direct Telegram delivery gotcha.
+- `vesper.briefing.deliver` — deliver undelivered briefings via email using `mcp_google_workspace_send_gmail_message` (automated path: Dispatch's `briefing_deliver.py` via the `dispatch:briefing-deliver` cron — morning → Telegram, evening → email; the MCP steps here are the manual fallback). Scan individual briefing files for non-delivered status, convert content to HTML, send via MCP, update both the individual file and `briefings.jsonl` on success. In cron sessions where the email MCP is unavailable, `python3 scripts/delivery_check.py --type <morning|evening|all> --deliver` performs the same scan, delivers via the Telegram fallback, and updates both records — see Direct Telegram delivery gotcha.
 - `vesper.briefing.check` — inspect the latest briefing file (`scripts/check_briefing.py`)
 - `vesper.decisions.pending` — list unacted decision requests
 - `vesper.config.set` — update schedule, sections, delivery
