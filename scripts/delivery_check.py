@@ -32,6 +32,24 @@ JSONL = os.path.join(DATA, "briefings.jsonl")
 MAX_AGE_DAYS = 2
 
 
+def _env_file_value(key):
+    """Read a key from the profile .env.
+
+    Operator identity/config is kept out of this public repo on purpose; the
+    profile .env (outside the repo) is the canonical home.
+    """
+    try:
+        env_path = os.path.expanduser("~/.hermes/profiles/indigo/.env")
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith(key + "="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+    except OSError:
+        pass
+    return ""
+
+
 def is_undelivered(rec):
     ds = rec.get("delivery_status", None)
     if isinstance(ds, str) and ds == "silent":
@@ -200,7 +218,7 @@ def deliver_email(rec):
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
     # Local template module (lazy so --help works without it)
-    sys.path.insert(0, "~/.hermes/profiles/indigo/commons/email-templates")
+    sys.path.insert(0, os.path.expanduser("~/.hermes/profiles/indigo/commons/email-templates"))
     from send_email import render_vesper_template
 
     date = rec.get("date")
@@ -217,9 +235,13 @@ def deliver_email(rec):
     html_body = render_vesper_template(data)
 
     sender = os.environ.get("VESPER_SENDER_EMAIL", "mx.indigo.karasu@gmail.com")
-    recipient = os.environ.get("VESPER_OWNER_EMAIL", "<operator-email>")
+    recipient = (os.environ.get("VESPER_OWNER_EMAIL")
+                 or os.environ.get("OCAS_OPERATOR_EMAIL")
+                 or _env_file_value("OCAS_OPERATOR_EMAIL"))
+    if not recipient:
+        return False, "No recipient configured — set OCAS_OPERATOR_EMAIL in the profile .env"
 
-    creds_dir = "~/.google_workspace_mcp/credentials"
+    creds_dir = os.path.expanduser("~/.google_workspace_mcp/credentials")
     credentials_path = os.path.join(creds_dir, f"{sender}.json")
     if not os.path.exists(credentials_path):
         return False, f"Missing Gmail credentials file: {credentials_path}"
