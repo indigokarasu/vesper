@@ -29,12 +29,29 @@ import os
 import sys
 from datetime import datetime
 
-sys.path.insert(0, "/root/.hermes/profiles/indigo/skills/ocas-dispatch/scripts")
-from briefing_deliver import status_of  # noqa: E402  single source of truth
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 TERMINAL = ("delivered", "silent", "skipped_stale")
 
 DATA = os.path.expanduser("~/.hermes/commons/data/ocas-vesper")
+
+
+def status_of(rec):
+    """The sender's status field, in either storage shape.
+
+    Mirrors briefing_deliver.status_of, which is the delivery contract. Kept
+    local rather than imported across repos: that module is not part of this
+    repo, and importing it by absolute host path made the test suite (and CI)
+    depend on a machine-specific path to a file that no longer ships.
+    """
+    ds = rec.get("delivery_status")
+    if isinstance(ds, str):
+        return ds
+    if isinstance(ds, dict):
+        return ds.get("status")
+    if rec.get("delivered") is True:
+        return "delivered"
+    return None
 
 
 def is_delivered(rec):

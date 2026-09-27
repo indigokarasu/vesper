@@ -56,7 +56,7 @@ def is_undelivered(rec):
     # freshness guard (never sent late) — both terminal, never "undelivered".
     if isinstance(ds, str) and ds in ("silent", "skipped_stale"):
         return False
-    if isinstance(ds, dict) and ds.get("status") == "silent":
+    if isinstance(ds, dict) and ds.get("status") in ("silent", "skipped_stale"):
         return False
 
     delivered = rec.get("delivered", None)

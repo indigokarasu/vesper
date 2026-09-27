@@ -35,6 +35,18 @@ class TestDeliveryStatus(unittest.TestCase):
         self.check(is_undelivered, [({"delivery_status": "silent"}, False),
                                     ({"delivered": False, "delivery_status": {"status": "silent"}}, False)])
 
+    def test_skipped_stale_never_undelivered(self):
+        """skipped_stale is terminal in BOTH storage shapes.
+
+        Regression: only the string form was handled, so a record shaped
+        {"delivery_status": {"status": "skipped_stale"}} read as undelivered
+        and the sender would have re-emitted a briefing it had already swept.
+        """
+        self.check(is_undelivered, [({"delivery_status": "skipped_stale"}, False),
+                                    ({"delivery_status": {"status": "skipped_stale"}}, False),
+                                    ({"delivered": False,
+                                      "delivery_status": {"status": "skipped_stale"}}, False)])
+
     def test_has_content(self):
         self.check(has_content, [({"content": "Hello world"}, True), ({"content": ""}, False),
                                  ({"content": "   \n"}, False), ({"content": None}, False), ({}, False)])
@@ -91,9 +103,17 @@ class TestDupGuard(unittest.TestCase):
         self.check([({"delivered": True}, True)])
 
     def test_guard_agrees_with_sender(self):
-        """The guard must never disagree with the sender about a real record."""
-        sys.path.insert(0, "/root/.hermes/profiles/indigo/skills/ocas-dispatch/scripts")
-        from briefing_deliver import TERMINAL as SENDER_TERMINAL, status_of
+        """The guard must never disagree with the sender about a real record.
+
+        The sender ships outside this repo, so the cross-check only runs where
+        it is actually installed. CI must not fail on a missing host path --
+        the in-repo table tests above are the portable coverage.
+        """
+        try:
+            sys.path.insert(0, "/root/.hermes/profiles/indigo/skills/ocas-dispatch/scripts")
+            from briefing_deliver import TERMINAL as SENDER_TERMINAL, status_of
+        except ImportError:
+            self.skipTest("sender module not installed on this host")
 
         recs = [
             {"delivered": True},
