@@ -18,10 +18,11 @@ Use it from a cron run before writing the briefing file:
     # exit 0 -> proceed with generation
     # exit 3 -> duplicate; read the message, do NOT regenerate
 
-Delivery state is read with ``status_of``, imported from briefing_deliver.py
-itself, so the guard and the sender can never disagree about whether something
-was sent. Do not reimplement the rule here: an earlier local copy diverged on
-the timestamp rule and the unit tests caught it.
+Delivery state is read with ``status_of``, a thin local mirror of the rule the
+sender (briefing_deliver.py) applies, so the guard and the sender cannot
+disagree about whether something was sent. Do not reimplement the terminal
+rule here: an earlier local copy diverged on the timestamp case and the unit
+tests caught it.
 """
 import argparse
 import json
