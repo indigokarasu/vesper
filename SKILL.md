@@ -131,6 +131,19 @@ Key constraints:
 
 **Dispatch → Vesper:** Dispatch writes `DispatchSummaryReport` to `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json`. Vesper uses this for the Messages section.
 
+> **Do not derive the Messages section from anything that only COUNTS mail.** A count-based
+> triage reports `status: ok` indefinitely while never opening a message body, so a paid
+> consultation invite and a stalled job application both stay invisible. The Messages section
+> must come from a report whose items were produced by reading thread bodies and scoring them
+> for value (`opportunity_triage.py` in the indigo profile does this). A morning briefing that
+> has weather, calendar and a system alert but no mention of a $1,750/hr opportunity is the
+> signature of this bug.
+>
+> **Never filter by sender convention.** `noreply` / `donotreply` in a From address is the
+> convention legitimate recruiters and consultancies use; an early noise filter matched it and
+> silently dropped a live Workday account-link request. Reject noise by CONTENT, and let a
+> message earn its place by scoring. `scripts/tests/test_opportunity_triage.py` pins this.
+
 **Rally → Vesper:** Rally writes daily portfolio reports to `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper uses this for the Markets section.
 
 **Schedule/venue intake polling (per [[`spec-ocas-suite-cross-skill-updates.md` ⚠️ Pending spec] ⚠️ Pending spec — not yet authored]):** Vesper polls the following intake directories during briefing generation and merges their briefs into the schedule / agenda sections:

@@ -15,6 +15,8 @@ For faster briefing generation, fetch signals from multiple sources in parallel 
 
 **Fallback pattern**: If a subagent returns an auth failure for Gmail, retry the query directly in the parent session. Do not block the entire briefing on one source's auth state.
 
+**`gws_direct_puller.py` returns an empty `calendar` array for `primary` — do not trust it as proof of no events.** Its `pull_calendar` queries `calendarId="primary"` only, which resolves to the token owner's default calendar. Family and secondary calendars are invisible to it, and it returned `"calendar": []` for a 36h window on 2026-09-27 that actually held events. Working pattern: import the puller, call `_require_google()`, then `load_creds` + `ensure_fresh` (load_creds returns a 3-tuple, not creds), and loop over the calendar IDs in `commons/data/ocas-sands/calendars.json` filtering `lane in ("mine","family")`. That surfaced all 6 events across the owned, work, family and CC calendars. A "no events today" line in a briefing must come from a full multi-calendar sweep.
+
 ## Signal evaluation workflow
 
 1. Gather raw signals into a list: `{signal_id, source, raw_summary, relevance_score}`

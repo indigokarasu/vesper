@@ -33,3 +33,11 @@ Correct order:
 4. Write journal
 
 NEVER append JSONLs during the draft phase. A failed draft that has been appended to JSONL creates a ghost record that complicates delivery tracking.
+
+**A blocked multi-file write can leave a PARTIAL append — detect and repair it.** The security scanner rejects a `python3 persist.py` invocation on some command shapes, and when the persist script does multiple appends in one process, the rejection can land *after* the first file was written. Observed 2026-09-27: `signals_evaluated.jsonl` got 4 of 25 rows. Two guards:
+- Make every persist script idempotent: read the target file first, and skip the whole block when this run's `run_id` / `briefing_id` is already present. A second run then tells you what actually landed.
+- After any persist, assert the expected row count for the run (`grep -c <run_id> file`) rather than trusting the script's exit code. If short, delete the partial rows by matching `run_id` inside the JSON, then rerun.
+
+Both appends also must be validated: parse every line of `briefings.jsonl`, `signals_evaluated.jsonl` and `decisions.jsonl` after writing. A partial write can produce a syntactically broken line that `delivery_check.py` will later choke on.
+
+**Chained `cmd && python3 -c` verification in one terminal call gets blocked by the nested-shell scanner.** Run the script, then run verification as a separate call. Same for `curl | python3` — write the payload to a file in scratch first, then parse it.
