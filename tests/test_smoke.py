@@ -8,6 +8,99 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from delivery_check import has_content, is_undelivered
 from dup_guard import is_delivered
+from quality_check import check_internal_maintenance
+
+
+def _brief(system_text=None, content="Good morning\nYou have a 10:00 with Sarah."):
+    """A minimal well-formed briefing, optionally carrying one System item."""
+    sections = []
+    if system_text is not None:
+        sections.append({
+            "section_type": "system",
+            "section_marker": "⚙",
+            "content_items": [{"summary": system_text}],
+        })
+    return {"type": "morning", "sections": sections, "content": content}
+
+
+class TestInternalMaintenanceGate(unittest.TestCase):
+    """3f must catch the real defect and must not flag the legitimate neighbour.
+
+    Both directions are pinned: a gate that only ever returns clean is a
+    safe-direction false negative, and one that flags everything would stop
+    briefings being delivered at all.
+    """
+
+    def test_catches_the_two_delivered_offenders(self):
+        """The exact strings that reached Jared's inbox on 09-28 and 09-29."""
+        offenders = [
+            ("Chronicle context engine: 51 init failures across 9 hours (06:42-15:30 PDT), "
+             "peak 10/hour. All self-healed via heuristic fallback. Duplicate-core hypothesis "
+             "falsified; measured root cause is 5s init busy timeout."),
+            ("Custodian proposal insight-20260928-fingerprint-msfield-fix (tier 3, "
+             "confidence 0.95, status open). Raw log lines carry 'YYYY-MM-DD HH:MM:SS,mmm' "
+             "prefixes, so the millisecond field produced literal 503/402/429 tokens."),
+        ]
+        for text in offenders:
+            with self.subTest(text=text[:40]):
+                self.assertTrue(check_internal_maintenance(_brief(text)),
+                                "gate missed a delivered offender")
+
+    def test_catches_maintenance_in_rendered_content_only(self):
+        """A violation can arrive through `content` with no System section at all."""
+        b = {"type": "morning", "sections": [],
+             "content": "Good morning\nThe fleet-wide watchdog tripped and self-healed."}
+        self.assertTrue(check_internal_maintenance(b))
+
+    def test_allows_owner_relevant_absence(self):
+        """A missing data source is the OWNER's information, not our maintenance.
+
+        This is the near-miss boundary: deleting this assertion would let the
+        gate quietly expand until briefings cannot say why a section is empty.
+        """
+        ok = [
+            "Calendar sync and email delivery are currently unavailable this cycle, so "
+            "today's events and new messages do not appear here.",
+            "Email source silent this cycle; no Dispatch summary available. Briefing built "
+            "from calendar context and portfolio report.",
+            "Some supporting market indicators were unavailable for today's report.",
+            "Your portfolio closed yesterday at $412,908 (-0.4%). Tomorrow: gym 10:00, "
+            "breast imaging 12:15.",
+        ]
+        for text in ok:
+            with self.subTest(text=text[:40]):
+                self.assertEqual(check_internal_maintenance(_brief(text)), [])
+
+    def test_allows_portfolio_performance_language(self):
+        """The words the owner is actually reading must never be flagged.
+
+        Regression: the first draft of this gate included `benchmark` and
+        `throughput`, which fire on "Portfolio beat the SPY benchmark by 0.60%"
+        and "throughput was 62% of baseline". A corpus sweep over 61 delivered
+        briefings found 6 such false positives and zero real ones among them.
+        The two terms were removed; this pins the removal.
+        """
+        ok = [
+            "The portfolio beat the SPY benchmark by 0.60% today (SPY -0.53%). "
+            "Five orders filled. UTHR was the strongest mover at +4.9%.",
+            "Your portfolio lagged the benchmark by 0.12% on the day. Throughput was "
+            "normal and allocation is unchanged.",
+        ]
+        for text in ok:
+            with self.subTest(text=text[:40]):
+                self.assertEqual(check_internal_maintenance(_brief(text)), [])
+
+    def test_clean_briefing_passes(self):
+        self.assertEqual(check_internal_maintenance(_brief()), [])
+
+    def test_empty_and_missing_fields_are_not_flagged(self):
+        """A malformed briefing must report the malformed thing, not this gate."""
+        for b in ({}, {"sections": []}, {"content": ""},
+                  {"sections": [{"section_type": "system", "content_items": []}]},
+                  {"sections": [{"section_type": "system",
+                                 "content_items": [{"summary": ""}]}]}):
+            with self.subTest(briefing=b):
+                self.assertEqual(check_internal_maintenance(b), [])
 
 
 class TestDeliveryStatus(unittest.TestCase):

@@ -55,6 +55,79 @@ def check_terminology(content):
     return issues
 
 
+# 3f: No INTERNAL MAINTENANCE in a user-facing briefing.
+#
+# The owner directive this enforces: system status, self-repair narration and
+# scheduler chatter do not belong in a briefing. "Normal-state system health is
+# silence" and "exclude internal system reasoning" were already in the skill's
+# prose and the defect still recurred, because nothing between the generator and
+# the inbox tested for it. A rule only the model can honour is not a rule; this
+# is the surface that makes it inevitable.
+#
+# SCOPE, and the false-positive boundary: a briefing MAY say that a data source
+# the owner expects is missing from THIS briefing ("calendar sync and email
+# delivery are currently unavailable this cycle, so today's events and new
+# messages do not appear here"). That is a statement about the owner's data and
+# is welcome. It may NOT narrate the engine's own maintenance: incident counts,
+# root-cause work, self-repair, fleet-wide diagnostics, triage metadata, or
+# tickets queued for the owner from our own backlog. The discriminator is whose
+# problem the sentence is about, not whether it contains numbers.
+MAINTENANCE_PATTERNS = [
+    # incident / self-repair narration
+    r'\bRCA\b', r'\broot cause\b', r'\bhypothesi[sz]ed?\b', r'\bself[- ]heal(?:ed|ing)?\b',
+    r'\binit timeout\b', r'\bfalse[- ]positive', r'\btimestamp strip\b',
+    r'\bRCA coverage\b', r'\bhealed\b', r'\bremediation\b',
+    # operational internals the owner does not act on
+    #
+    # `benchmark` was in this list and was REMOVED after the corpus sweep:
+    # it fires on "Portfolio beat the SPY benchmark by 0.60%", which is the
+    # owner's money and exactly what a briefing is for. A term earns its place
+    # here only by having no reading that is owner-relevant.
+    r'\bfleet[- ]wide\b', r'\bwatchdog\b', r'\bbackoff\b', r'\bheartbeat\b',
+    r'\bdeadlock\b', r'\bretry storm\b', r'\bdaemon\b', r'\bqueue depth\b',
+    r'\blastron\b',
+    # triage / artifact metadata
+    r'\btier\s*[0-9]\b', r'\bconfidence\s*[0-9]+(?:\.[0-9]+)?\b',
+    r'\binsight-\d{8}-[a-z]', r'\bproposal[_ ]id\b', r'\bsignal[_ ]id\b',
+]
+
+
+def check_internal_maintenance(briefing):
+    """3f: Briefings carry the owner's decisions, not the engine's maintenance log."""
+    issues = []
+    for source, text in _maintenance_texts(briefing):
+        for pattern in MAINTENANCE_PATTERNS:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if not match:
+                continue
+            start = max(0, match.start() - 40)
+            end = min(len(text), match.end() + 60)
+            issues.append(
+                f"  Internal maintenance in {source} "
+                f"('{match.group()}'): ...{text[start:end].replace(chr(10), ' ')}..."
+            )
+    return issues
+
+
+def _maintenance_texts(briefing):
+    """Every user-facing string in a briefing, as (label, text).
+
+    Walks sections first and the rendered `content` second, so a violation is
+    reported against the section that authored it when both carry it.
+    """
+    out = []
+    for section in briefing.get('sections', []) or []:
+        stype = section.get('section_type', section.get('id', 'unknown'))
+        for item in section.get('content_items', []) or []:
+            text = item.get('summary') or item.get('text') or ''
+            if text:
+                out.append((f"section '{stype}'", text))
+    content = briefing.get('content') or ''
+    if content:
+        out.append(('rendered content', content))
+    return out
+
+
 def check_sections_have_content(briefing):
     """3b: All included sections have actual content."""
     issues = []
@@ -169,6 +242,7 @@ def main():
     
     # Run all checks
     all_issues.extend(check_terminology(content))
+    all_issues.extend(check_internal_maintenance(briefing))
     all_issues.extend(check_sections_have_content(briefing))
     all_issues.extend(check_greeting(briefing))
     all_issues.extend(check_signals_evaluated(briefing, signals_path))
