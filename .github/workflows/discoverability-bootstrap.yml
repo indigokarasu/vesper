@@ -1,23 +1,20 @@
 name: Repository discoverability bootstrap
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
+    paths:
+      - .github/workflows/discoverability-bootstrap.yml
 permissions:
   contents: write
   issues: write
 
 jobs:
-  metadata:
+  discoverability:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
     steps:
-      - name: Repository description and topics
-        run: |
-          gh api --method PATCH "repos/$REPO" -f description='Vesper: daily briefing generator — aggregates signals from all skills into concise morning and evening briefings.'
-          gh api --method PUT "repos/$REPO/topics" -H "Accept: application/vnd.github+json" -F 'names[]=agent-skills' -F 'names[]=ai-agent' -F 'names[]=automation' -F 'names[]=briefing' -F 'names[]=claude' -F 'names[]=daily-briefing' -F 'names[]=ocas' -F 'names[]=openclaw' -F 'names[]=productivity'
-
       - name: Standard labels
         continue-on-error: true
         run: |
