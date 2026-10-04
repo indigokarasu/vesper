@@ -103,6 +103,31 @@ If `delivery_status.status == "delivered"` with a valid `delivered_at` but `deli
 
 3. **`delivered_at: null` at top level + `delivery_status.delivered_at` has timestamp** — The nested field was set but the top-level mirror wasn't. Fix: copy the timestamp to the top-level `delivered_at` field.
 
+### Ledger drift: canonical files vs `briefings.jsonl` (root cause, confirmed 2026-10-03)
+
+`dispatch:briefing-deliver` (`ocas-dispatch/scripts/briefing_deliver.py`) updates **only** the individual
+canonical files and `delivery-log.jsonl`. It never writes `briefings.jsonl`, so every briefing sent through
+the automated email path leaves the index stale. Treat a `pending` row in `briefings.jsonl` as **unproven**,
+not as "undelivered" — and never run `--deliver` off the JSONL scan to "fix" it.
+
+Consequences worth knowing before acting:
+
+- **The drift is inert.** `main()` sends only from `scan_individual`, never `scan_jsonl`. `delivery_check.py`
+  prints the JSONL count but never delivers from it, so ledger drift cannot cause a duplicate email.
+- **Reconcile only on evidence.** Mark a drifted row `delivered` only when the canonical file says delivered
+  **and** `delivery-log.jsonl` has a matching `event: sent` row. Use the canonical file's *real*
+  `delivered_at`, never `now()` — `mark_delivered_jsonl` would stamp the current time and destroy the evidence.
+- **A status report is testimony, not proof.** `delivery-log.jsonl` only begins **2026-09-25**. The
+  2026-09-19/20/21 evening rows assert delivery in their canonical files with no log row behind them; leave
+  them `pending` rather than asserting a delivery that cannot be evidenced.
+- **Never `delivered` a skip.** 2026-08-24 was `skipped_stale`, so it becomes `skipped_stale` in the ledger,
+  not `delivered`.
+- **Conflicting flags are the real signal.** Rows reading `delivered=True` alongside `delivery_status=pending`
+  are flag-desyncs; `is_undelivered()` catches them, so a naive "filter out delivered rows" check reports zero
+  drift while `delivery_check.py` reports four. Trust `delivery_check.py`'s own functions over a reimplementation.
+- Reconcile with a **surgical per-line edit** (backup first, preserve corrupted siblings byte-for-byte) as the
+  2026-10-01 append-only rule requires — never a whole-file rewrite or a global-key dedupe.
+
 ### Silent Entries
 
 Entries with `delivery_status == "silent"` and empty `sections`/`content` were intentionally suppressed. Mark `delivered = true` to prevent re-checking.
