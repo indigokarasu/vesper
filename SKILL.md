@@ -76,7 +76,9 @@ Vesper does **not** own: signal generation, portfolio management (Rally), calend
 
 Read `references/signal_filtering.md` for full rules.
 
-Summary: Include actionable information, meaningful outcomes, plan-affecting changes, multi-signal opportunities, and preparation-useful information. Exclude routine background activity, already-experienced events, internal system reasoning, and speculative observations. Evening-specific: no past weather, no summaries of attended meetings.
+- **Never narrate system maintenance, self-repair, or internal architecture in a briefing.** 2026-09-28, direct: "I need you to stop putting system updates and trash in my briefings, it's only stuff that is relevant to me... keep it to yourself." This covers the System section, the Today section, and decision items alike. A System section that would only report maintenance is DROPPED, not softened.
+- **Never route a maintenance item to the owner as a pending decision.** 09-28, same session: "for the 'Decisions pending your call' these are just things you need to fix, not ask me permission to keep your system in order." Decisions are the owner's real choices (spending, committing, hiring); a broken job is yours to fix.
+- Summary: Include actionable information, meaningful outcomes, plan-affecting changes, multi-signal opportunities, and preparation-useful information. Exclude routine background activity, already-experienced events, internal system reasoning, and speculative observations. Evening-specific: no past weather, no summaries of attended meetings.
 
 ## Formatting rules
 
