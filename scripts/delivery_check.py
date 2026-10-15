@@ -220,21 +220,24 @@ def deliver_email(rec):
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
     # Local template module (lazy so --help works without it)
-    sys.path.insert(0, os.path.expanduser("~/.hermes/profiles/indigo/commons/email-templates"))
-    from send_email import render_vesper_template
+    templates_dir = os.path.expanduser("~/.hermes/profiles/indigo/commons/email-templates")
+    sys.path.insert(0, templates_dir)
+    import vesper_briefing
 
     date = rec.get("date")
     bt = rec.get("type", "briefing")
     label = bt.capitalize() if bt in ("morning", "evening") else "Briefing"
-    subject = f"{label} Briefing — {date}"
 
     # Use the proper vesper template to render styled HTML
     data = {
         "type": bt,
         "date": date,
+        "label": label,
         "content": rec.get("content", ""),
     }
-    html_body = render_vesper_template(data)
+    subject_line = vesper_briefing.subject(data)
+    html_body = vesper_briefing.render(data)
+    subject = f"{label} Briefing — {date}"
 
     sender = os.environ.get("VESPER_SENDER_EMAIL", "mx.indigo.karasu@gmail.com")
     recipient = (os.environ.get("VESPER_OWNER_EMAIL")
