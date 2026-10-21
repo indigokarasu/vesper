@@ -5,7 +5,7 @@ description: 'Daily briefing generator. Aggregates signals from across the syste
   in natural language without exposing internal processes. NOT for: deep research
   (use Sift), pattern analysis, message drafting (use Dispatch), or raw data queries (use Styx directly).'
 license: MIT
-source: https://github.com/<agent-handle>/vesper
+source: https://github.com/indigokarasu/vesper
 includes:
 - references/**
 - scripts/**
