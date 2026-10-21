@@ -82,6 +82,8 @@ Read `references/signal_filtering.md` for full rules.
 
 ## Formatting rules
 
+- **Delivery volume (standing rule):** Only the morning and evening vesper briefings may be sent by email. No other job, touchpoint, or skill may email Jared. Proactive findings (job search, menu monitor, dream journal, autobio, daemon watch, etc.) are written to files/briefings/dashboard and surfaced inside the next morning/evening briefing instead. When pausing email senders, keep their underlying work running and route output to files.
+
 Read `references/briefing_templates.md` for structure and examples, `references/html-templates.md` for HTML layout, and `references/weather-codes.md` for weather rendering.
 
 Key constraints:
