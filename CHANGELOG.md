@@ -1,5 +1,10 @@
 ## [2.10.0] - 2026-04-26
 
+## [2.15.0] - 2026-10-23
+
+### Added
+- **◆ Projects section** — what is waiting on the owner and project status changes, from Mentor's project tags and Finch's in-flight tracker; omitted when empty.
+
 ## [2.14.0] - 2026-09-16
 
 ### Added

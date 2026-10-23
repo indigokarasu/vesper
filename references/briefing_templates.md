@@ -70,6 +70,18 @@ Portfolio opened at $142,830 and closed at $143,544 (+0.5%). No notable movers.
 The contractor needs a go/no-go on the bathroom tile by Wednesday. Two options in the shared doc, estimate difference is $400.
 ```
 
+## Projects section (◆ Projects)
+Source: Mentor's project tags in `commons/data/ocas-mentor/project-status.json` (status, reason, next_step per project),
+status changes in `commons/journals/ocas-mentor/projects-*.json`, and Finch's in-flight list in
+`commons/data/ocas-finch/tracker.json` (items waiting on the owner; the state is named after the owner, `waiting_on_<owner>`). Read only; never edit them.
+Content, at most 5 lines, in this order:
+1. Projects tagged as waiting on the owner (`waiting-on-<owner>`): name and the one thing needed from the owner, one line each.
+2. Status changes since the previous briefing, in plain words ("the blog site is now in maintenance",
+   "the consulting inquiry is waiting on the client"). Morning covers since last evening; evening covers today.
+Skip anything already shown under ⟡ Decisions. Never show tag names, ids or internal states as jargon:
+say "waiting on you", "waiting on <who>", "in progress", "in maintenance", "finished", "dropped".
+Omit the section when there is nothing to show. It goes after ⚑ Logistics and before ◈ Markets.
+
 ## Weather rules
 
 Greeting line: "Good morning" or "Good evening". No punctuation after the greeting.

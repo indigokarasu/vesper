@@ -7,7 +7,7 @@
 
 ## BriefingSection
 ```json
-{"section_type":"string — today|messages|logistics|markets|decisions|system","section_marker":"string — ▪|✉|⚑|◈|⟡|⚙","content_items":["ContentItem"]}
+{"section_type":"string — today|messages|logistics|projects|markets|decisions|system","section_marker":"string — ▪|✉|⚑|◆|◈|⟡|⚙","content_items":["ContentItem"]}
 ```
 
 ## ContentItem

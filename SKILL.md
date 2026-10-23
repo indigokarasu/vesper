@@ -16,7 +16,7 @@ triggers:
 - status summary
 metadata:
   author: Indigo Karasu (indigokarasu)
-  version: "2.14.0"
+  version: "2.15.0"
   hermes:
     category: productivity
     tags:
@@ -141,6 +141,8 @@ Key constraints:
 ## Inter-skill interfaces
 
 **Custodian → Vesper:** Custodian writes InsightProposal files (`anomaly_alert` type) to `{agent_root}/commons/data/ocas-custodian/proposals/{proposal_id}.json`. Vesper reads them during briefing generation.
+
+**Mentor + Finch → Vesper:** Mentor's project tags (`{agent_root}/commons/data/ocas-mentor/project-status.json`, changes in `commons/journals/ocas-mentor/projects-*.json`) and Finch's in-flight list (`commons/data/ocas-finch/tracker.json`) feed the ◆ Projects section: what waits on the owner and status changes. Read only. See `references/briefing_templates.md`.
 
 **Dispatch → Vesper:** Dispatch writes `DispatchSummaryReport` to `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json`. Vesper uses this for the Messages section.
 

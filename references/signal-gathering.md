@@ -46,3 +46,6 @@ at 62°F, dropping to a low of 53°F overnight.
 ```
 
 This is correct behavior. Thin briefings are better than padded ones.
+
+## Project status (Mentor + Finch)
+Read `commons/data/ocas-mentor/project-status.json`, the newest `commons/journals/ocas-mentor/projects-*.json`, and `commons/data/ocas-finch/tracker.json` for the ◆ Projects section (see briefing_templates.md). Files only; no API calls.
