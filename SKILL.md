@@ -221,6 +221,17 @@ Cron options: `sessionTarget: isolated`, `lightContext: true`, `wakeMode: next-h
 
 Default times are 6am and 8pm PT. Override with `vesper.config.set morning_hour <H>` and `vesper.config.set evening_hour <H>`.
 
+## Disabling briefings
+
+Stopping briefing emails requires pausing BOTH generation and sending — pausing delivery alone does not work.
+
+- **Sending:** `dispatch:briefing-deliver` — pause it (`enabled: false`, `state: paused`). This is the sender; while paused its own tick won't fire.
+- **Generation:** `vesper:morning`, `vesper:evening`, `touchpoint:agenda`, `touchpoint:midday`, `touchpoint:wrap` — pause each one. These keep creating briefing files even when the sender is paused.
+
+Why: `dispatch:briefing-deliver` paused only stops its own tick. The generator jobs run independently and write today-dated briefings with real content. The delivery script (`briefing_deliver.py`) has no "disabled" gate — it sends any today-dated briefing past its earliest send time, including via an email fallback path that bypasses the paused dispatch job entirely. A briefing file marked `delivered: true` with channel `email` can exist even when `dispatch:briefing-deliver` is paused.
+
+To fully disable: pause all five generation jobs first, then confirm `dispatch:briefing-deliver` is paused. Generation creates nothing new; sending has nothing to pick up.
+
 ## Self-update
 
 `vesper.update` pulls the latest package from the `source:` URL in SKILL.md frontmatter. Runs silently unless version changed or error occurred. On failure, retries once. Output on success: `I updated Vesper from version {old} to {new}`.

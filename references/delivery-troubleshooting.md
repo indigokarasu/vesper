@@ -236,7 +236,31 @@ Finch reports do not have a `delivery_status` field and are not delivered to the
 
 **When asked to "check cron output for finch reports":** The correct interpretation is to check whether any cron job's output contains a finch report that needs separate delivery. In practice, finch cron jobs (finch:daily, finch:weekly) produce journal entries, not standalone deliverable reports. The `cron/output/` files are their execution logs, not the reports themselves.
 
-## Delivery-Checker Cron Job — Skip `cron/output/` for Finch
+## Failure Mode 4: Fallback Delivery Bypasses Paused Delivery Job
+
+The briefing delivery script (`briefing_deliver.py`) has **no "disabled" gate**. It sends any today-dated briefing with real content by email once it's past its earliest send time. Terminal states are only `delivered` / `skipped_stale` / `silent`.
+
+### Symptoms
+- User disabled daily briefing emails (paused `dispatch:briefing-deliver`), but a briefing still arrived by email.
+- The briefing file shows `"delivered": true` with `"channel": "email"` and a note like "Delivered via Email fallback - email MCP unavailable in cron session".
+- `dispatch:briefing-deliver` job state is `paused`, but the briefing was still sent.
+
+### Root Cause
+Only the **delivery** job was paused. The **generation** jobs (`vesper:morning`, `vesper:evening`, `touchpoint:agenda`, `touchpoint:midday`, `touchpoint:wrap`) were never disabled. The evening generator produced a content-bearing briefing, and a fallback email path (triggered when the email MCP is unavailable in the cron session) sent it directly — bypassing the paused delivery job entirely.
+
+### Fix
+To fully stop briefing emails:
+1. **Pause the delivery job**: `dispatch:briefing-deliver` (the sender).
+2. **Pause ALL generation jobs**: `vesper:morning`, `vesper:evening`, `touchpoint:agenda`, `touchpoint:midday`, `touchpoint:wrap`. These create the briefing files that the fallback can still send.
+3. Verify: check that no briefing files are being generated (`commons/data/ocas-vesper/briefings/YYYY-WXX/` should have no new files).
+
+### Diagnosis
+- Check cron job states: `cronjob(action='list')` — look for `vesper:*` and `touchpoint:*` jobs with `state: "scheduled"` (enabled).
+- Check the briefing file's `delivery_status` and `delivery_note` fields for "fallback" or "email MCP unavailable".
+- Check `dispatch:briefing-deliver` state — if `paused` but briefings still arrive, generation jobs are still running.
+
+### Prevention
+When disabling briefings, always disable both layers: generation AND delivery. The delivery script has no gate that checks whether delivery is "disabled" — it will send any content-bearing briefing it finds.
 
 The delivery-checker cron job prompt may instruct you to check `cron/output/` for finch output files (patterns like `finch_*.md`, `daily_*.md`). **This step can be skipped.** Here's why:
 
