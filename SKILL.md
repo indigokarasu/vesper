@@ -1,9 +1,6 @@
 ---
 name: ocas-vesper
-description: 'Daily briefing generator. Aggregates signals from across the system into
-  concise morning and evening briefings. Surfaces outcomes, opportunities, and decisions
-  in natural language without exposing internal processes. NOT for: deep research
-  (use Sift), pattern analysis, message drafting (use Dispatch), or raw data queries (use Styx directly).'
+description: 'Daily morning and evening briefing generator. Aggregates signals from across the system into concise briefings. Surfaces outcomes, opportunities, and decisions in natural language without exposing internal processes. NOT for: deep research (use Sift), pattern analysis, message drafting (use Dispatch), or raw data queries (use Styx directly).'
 license: MIT
 source: https://github.com/indigokarasu/vesper
 includes:
@@ -24,43 +21,48 @@ metadata:
     - aggregation
     - natural-language
     - OCAS-core
+    config:
+    - key: VESPER_SENDER_EMAIL
+      description: Sender address for briefing emails
+      default: mx.indigo.karasu@gmail.com
+    - key: VESPER_OWNER_EMAIL
+      description: Recipient address for briefings
+      default: jared.zimmerman@gmail.com
+    - key: OCAS_OPERATOR_EMAIL
+      description: Fallback recipient alias
+      default: jared.zimmerman@gmail.com
+    - key: AGENT_ROOT
+      description: Hermes agent root
+      default: ~/.hermes
+required_environment_variables:
+- name: AGENT_ROOT
+  prompt: Agent root directory
+  help: Hermes profile root containing commons/data and commons/journals
+  required_for: optional
 ---
+
 ## Interactive Menu
 
-When invoked interactively, present a two-level menu using the `clarify` tool. See `references/interactive-menu.md` for the full menu structure, response parsing, and platform adaptation.
+When invoked interactively, present a two-level menu using the `clarify` tool. See `references/interactive-menu.md`.
 
-
-
-
-Vesper is the system's daily voice — it aggregates signals from every other skill and presents what matters as a concise, conversational morning or evening briefing, surfacing concrete outcomes, upcoming decisions, and actionable opportunities without exposing any internal architecture or analysis processes. This skill exists because raw signal data from individual skills is not actionable — the owner needs a synthesized, natural-language summary.
+Vesper is the system's daily voice — a concise, conversational morning/evening briefing aggregated from every other skill. Raw signals aren't actionable alone; this skill synthesizes them into natural language — no internal architecture exposed.
 
 ## When to Use
 
 - Daily briefing generation (morning, evening, on-demand)
-- Signal aggregation from all OCAS skills
+- Aggregate signals from all OCAS skills
 - Morning summary of calendar, email, and system status
 - End-of-day wrap-up and next-day preview
-- Checking pending decision requests
-- Configuring briefing schedule or sections
+- List pending decision requests; configure schedule or sections
 
 ## When NOT to Use
 
-- Deep research — use Sift
+- Deep research — Sift
 - Pattern analysis
-- Message drafting — use Dispatch
-- Action execution — use relevant domain skill
-- Real-time monitoring
-- Calendar management (use Sands)
-- Email sending (use Dispatch)
-
-## What this skill does not do
-
-- Signal generation (no current skill for this)
-- Portfolio management (Rally)
-- Calendar management (Sands)
-- Communications delivery (Dispatch)
-- Research (Sift/Scout)
-- Action decisions (Praxis)
+- Message drafting — Dispatch
+- Action execution — the relevant domain skill
+- Calendar management — Sands
+- Email sending — Dispatch
 
 ## Account isolation
 
@@ -68,236 +70,169 @@ See `references/account-credentials.md` for Google account isolation rules and O
 
 ## Responsibility boundary
 
-Vesper owns briefing generation, signal aggregation, and decision presentation. It aggregates signals from Rally, Sands, Dispatch, and Calendar into morning and evening briefings, then writes completed briefings to its `briefings/` directory for Dispatch to pick up and deliver.
+Vesper owns briefing generation, signal aggregation, and decision presentation. It aggregates signals from Rally, Sands, Dispatch, and Calendar into morning and evening briefings, then writes completed briefings to `briefings/` for Dispatch to deliver.
 
-Vesper does **not** own: signal generation, portfolio management (Rally), calendar management (Sands), communications delivery (Dispatch), research (Sift/Scout), or action decisions (Praxis). It surfaces outcomes; it does not act.
+Vesper does not own: signal generation, portfolio management (Rally), calendar management (Sands), communications delivery (Dispatch), research (Sift/Scout), or action decisions (Praxis). It surfaces outcomes; it does not act.
 
 ## Signal filtering rules
 
 Read `references/signal_filtering.md` for full rules.
 
-- **Never narrate system maintenance, self-repair, or internal architecture in a briefing.** 2026-09-28, direct: "I need you to stop putting system updates and trash in my briefings, it's only stuff that is relevant to me... keep it to yourself." This covers the System section, the Today section, and decision items alike. A System section that would only report maintenance is DROPPED, not softened.
-- **Never route a maintenance item to the owner as a pending decision.** 09-28, same session: "for the 'Decisions pending your call' these are just things you need to fix, not ask me permission to keep your system in order." Decisions are the owner's real choices (spending, committing, hiring); a broken job is yours to fix.
-- Summary: Include actionable information, meaningful outcomes, plan-affecting changes, multi-signal opportunities, and preparation-useful information. Exclude routine background activity, already-experienced events, internal system reasoning, and speculative observations. Evening-specific: no past weather, no summaries of attended meetings.
+- Never narrate system maintenance, self-repair, or internal architecture (owner, 2026-09-28: "keep it to yourself"). Covers System, Today, decisions — maintenance-only System section DROPPED, not softened.
+- Never route a maintenance item as a pending decision. Decisions are the owner's real choices (spending, committing, hiring); a broken job is yours to fix.
+- Include: actionable info, outcomes, plan-affecting changes, multi-signal opportunities, prep-useful info. Exclude: background activity, past events, internal reasoning, speculation. Evening: no past weather, no attended-meeting summaries.
 
 ## Formatting rules
 
-- **Delivery volume (standing rule):** Only the morning and evening vesper briefings may be sent by email. No other job, touchpoint, or skill may email Jared. Proactive findings (job search, menu monitor, dream journal, autobio, daemon watch, etc.) are written to files/briefings/dashboard and surfaced inside the next morning/evening briefing instead. When pausing email senders, keep their underlying work running and route output to files.
+- **Delivery volume:** Only morning/evening vesper briefings may be emailed — no other job or skill emails Jared. Proactive findings surface inside the next briefing instead.
 
-Read `references/briefing_templates.md` for structure and examples, `references/html-templates.md` for HTML layout, and `references/weather-codes.md` for weather rendering.
+Read `references/briefing_templates.md` (structure + examples), `references/html-templates.md` (HTML layout), `references/weather-codes.md` (weather rendering).
 
 Key constraints:
-
-- No markdown syntax (#, **, ---) — plain text or minimal HTML suitable for Gmail
-- Conversational paragraphs, not bullet dumps
-- Section headers: ▪ Today, ✉ Messages, ⚑ Logistics, ◈ Markets, ⟡ Decisions, ⚙ System
-- Sections with no content are omitted entirely — no "nothing to report" placeholders
-- Normal-state system health is silence — no "all clear" or "systems normal"
+- No markdown (#, **, ---) — plain text/minimal HTML for Gmail; conversational paragraphs, not bullet dumps
+- Section headers: ▪ Today, ✉ Messages, ⚑ Logistics, ◈ Markets, ⟡ Decisions, ⚙ System — omit empty sections; normal-state health is silence ("all clear" never appears)
 - Opening: "Good morning" / "Good evening" (no punctuation after greeting)
-- Markets: morning shows yesterday's close; evening shows open and close. Notable movers only when material.
+- Markets: morning = yesterday's close; evening = open + close; notable movers only when material
 - Decision requests: option, benefit, cost — framed as optional
-- Links are inline with meaningful anchor text; see URI formats in reference files
-- When Vibes (ocas-vibes) is present, apply its voice and anti-AI rules to all briefing text
-- No nagging, no internal terminology, no speculative observations, no architecture references
+- Links inline, meaningful anchor text
+- No nagging, no internal terminology, speculation, or architecture references; apply Vibes voice rules
 
 ## Commands
 
 - `vesper.briefing.morning` — generate morning briefing
 - `vesper.briefing.evening` — generate evening briefing
 - `vesper.briefing.manual` — on-demand briefing
-- `vesper.briefing.deliver` — deliver undelivered briefings by EMAIL. **Email is the only briefing channel (Jared, restated 2026-09-25); there is no Telegram path and one must not be reintroduced.** Automated path: Dispatch's `briefing_deliver.py` via the `dispatch:briefing-deliver` cron — both morning and evening go to `jared.zimmerman@gmail.com`. The MCP steps here are the manual fallback. Scan individual briefing files for non-delivered status, convert content to HTML, send via MCP, update both the individual file and `briefings.jsonl` on success. In cron sessions where the email MCP is unavailable, `python3 scripts/delivery_check.py --type <morning|evening|all> --deliver` performs the same scan and updates both records. See `references/delivery-channel.md` for the enforcement rules and why a docstring is not enforcement.
+- `vesper.briefing.deliver` — deliver undelivered briefings by EMAIL only (owner rule, 2026-09-25; no Telegram). Automated: Dispatch's `briefing_deliver.py` via `dispatch:briefing-deliver` cron, both to `jared.zimmerman@gmail.com`. Manual fallback: scan files for non-delivered status, render HTML, send via MCP, update both file and `briefings.jsonl`. Cron fallback without the email MCP: `python3 scripts/delivery_check.py --type <morning|evening|all> --deliver`. See `references/delivery-channel.md` — a docstring is not enforcement.
 - `vesper.briefing.check` — inspect the latest briefing file (`scripts/check_briefing.py`)
 - `vesper.decisions.pending` — list unacted decision requests
 - `vesper.config.set` — update schedule, sections, delivery
 - `vesper.status` — last briefing time, pending decisions, schedule
-- `vesper.journal` — write journal for the current run; called at end of every run
+- `vesper.journal` — write journal for the current run (end of every run)
 - `vesper.update` — pull latest from GitHub source; preserves journals and data
-
-## Invocation modes
-
-- **Automatic morning** — during configured morning window
-- **Automatic evening** — during configured evening window
-- **Manual** — on user request
 
 ## Run completion
 
-- [ ] **Duplicate-fire guard — run FIRST, before gathering any signals.** The generator crons re-fire routinely (2026-09-19, 09-22, 09-23, 09-25 and 09-26 each ran twice). Rewriting today's canonical file resets `delivered` to false and the sender emails Jared a duplicate briefing with identical content. Run `python3 scripts/dup_guard.py --type <morning|evening>`; **exit 3 means duplicate: do not regenerate, do not re-deliver**, reconcile `briefings.jsonl` if it drifted from the canonical file, journal the skip, and stop. Only exit 0 means proceed. The guard imports `status_of` from `ocas-dispatch/scripts/briefing_deliver.py` so it can never disagree with the sender; do not reimplement the delivery rule locally.
-- [ ] **Apply Vibes rules** — Apply voice rules from SOUL.md directly (no em dashes, no "the user", no meta-narration, no "Now I have…"). **Do NOT load ocas-vibes via skill_view** — its rules are already embedded in SOUL.md/AGENTS.md.
-- [ ] Read InsightProposal files from Custodian `proposals/` directory. Apply signal filtering. Track consumed `proposal_id` values in `signals_evaluated.jsonl` to avoid reprocessing. Read Dispatch summary and Rally daily report if present. For parallel signal gathering, `delegate_task` works for calendar queries but subagent Gmail OAuth may fail independently — always have a direct fallback.
-- [ ] Write briefing file to `{agent_root}/commons/data/ocas-vesper/briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` using `VesperBriefingFile` schema. Create week directory if absent. **Path is non-negotiable** — the schema `briefings/YYYY-WXX/YYYY-MM-DD-{type}.json` is the delivery contract. If user instructions specify a different path (e.g., `morning/` or `evening/`), follow the schema for the canonical location AND save a copy to the requested path. The copy and the canonical file must be identical at write time; only delivery tracking (via `briefings.jsonl`) applies to the canonical path. Note the divergence in the journal.
-- [ ] **Briefing quality check**: Re-read the generated briefing file and verify: (a) no internal system terminology leaked through (no skill IDs, database references, or technical jargon — use **whole-word matching**, not substring matching, to avoid false positives like "DB" matching inside "Handbuilding"), (a2) **no internal maintenance leaked through — the owner's directive, enforced, not merely stated: the briefing must not narrate our own system status, self-repair, incident counts, root-cause work, root-cause analyses, fleet-wide diagnostics, or triage metadata (tier/confidence scores, proposal IDs), even when a System section is enabled in `config.json`. A missing data source IS allowed — "calendar sync unavailable, so today's events do not appear here" is the owner's information — and a System section that would have said only that stays; a System section whose content is maintenance gets dropped or rewritten. A rule only the model can honour is not a rule, so this is checked mechanically by `quality_check.py` check 3f (`check_internal_maintenance`); it runs against every section AND the rendered `content`, because the 09-28 noise arrived through `today` and `decisions`, not just `system`.** (b) all included sections have actual content — no empty sections, (c) the greeting matches the time-of-day format, (d) `signals_evaluated.jsonl` was updated with all consumed proposal IDs, and (e) every decision item traces to a real upstream signal — no fabricated or template-copied decisions. **Pitfall:** quality_check.py's `check_decisions_trace` function checks that decision summaries reference the upstream source skill name (e.g., "Dispatch", "Rally", "Custodian") as a whole word in the `summary` field. If the summary only describes the event without naming the source skill, the trace check fails. Always include the source skill name (e.g., "Dispatch email check surfaced...", "Rally daily report shows...") in decision summaries. If any check fails, regenerate the briefing before marking the run complete. **Tip:** Run `python3 scripts/quality_check.py <briefing-file.json> [signals-evaluated.jsonl]` for automated validation — it implements all five sub-checks with whole-word regex matching.
-- [ ] **Only after the briefing passes quality check**, persist the completed briefing record to `briefings.jsonl` and evaluated signals to `signals_evaluated.jsonl`. Log material decisions to `decisions.jsonl`. (Do not append these files before the quality check succeeds — the JSONL is the delivery contract and must match the final briefing exactly.)
-
-> **Append-only: never rewrite a JSONL to "clean" it.** On 2026-10-01 an evening run appended two ledger lines, then ran a
-> de-dupe that keyed on `(signal_id, briefing_id)` **globally** instead of scoping to the current run. It deleted 38 legitimate
-> historical entries; no git mirror or backup covered the loss (the mirrors stop at 2026-06-15). The ledgers
-> (`briefings.jsonl`, `decisions.jsonl`, `signals_evaluated.jsonl`) are append-only audit records, so:
-> - NEVER run a whole-file dedupe, dedent, re-serialize or "normalize" pass over any of them.
-> - If a line looks wrong, APPEND a corrected line and leave the original byte-for-byte in place. Corrupted sibling lines
->   are already handled surgically by `scripts/delivery_check.py`, which is the only sanctioned writer besides plain append.
-> - A same-run duplicate is left alone unless you remove it by line number you just wrote, not by global key match.
-- [ ] Write journal via `vesper.journal`.
+See `references/run-completion.md` for the full protocol: duplicate-fire guard runs first, signal gathering, briefing file contract, quality check, append-only JSONL persistence, journaling. Read before running a generator cron.
 
 ## Inter-skill interfaces
 
-**Custodian → Vesper:** Custodian writes InsightProposal files (`anomaly_alert` type) to `{agent_root}/commons/data/ocas-custodian/proposals/{proposal_id}.json`. Vesper reads them during briefing generation.
-
-**Mentor + Finch → Vesper:** Mentor's project tags (`{agent_root}/commons/data/ocas-mentor/project-status.json`, changes in `commons/journals/ocas-mentor/projects-*.json`) and Finch's in-flight list (`commons/data/ocas-finch/tracker.json`) feed the ◆ Projects section: what waits on the owner and status changes. Read only. See `references/briefing_templates.md`.
-
-**Dispatch → Vesper:** Dispatch writes `DispatchSummaryReport` to `{agent_root}/commons/data/ocas-dispatch/reports/YYYY-MM-DD-{period}.json`. Vesper uses this for the Messages section.
-
-> **Do not derive the Messages section from anything that only COUNTS mail.** A count-based
-> triage reports `status: ok` indefinitely while never opening a message body, so a paid
-> consultation invite and a stalled job application both stay invisible. The Messages section
-> must come from a report whose items were produced by reading thread bodies and scoring them
-> for value (`opportunity_triage.py` in the indigo profile does this). A morning briefing that
-> has weather, calendar and a system alert but no mention of a $1,750/hr opportunity is the
-> signature of this bug.
->
-> **Never filter by sender convention.** `noreply` / `donotreply` in a From address is the
-> convention legitimate recruiters and consultancies use; an early noise filter matched it and
-> silently dropped a live Workday account-link request. Reject noise by CONTENT, and let a
-> message earn its place by scoring. `scripts/tests/test_opportunity_triage.py` pins this.
-
-**Rally → Vesper:** Rally writes daily portfolio reports to `{agent_root}/commons/data/ocas-rally/reports/YYYY-MM-DD-daily.json`. Vesper uses this for the Markets section.
-
-**Schedule/venue intake polling (per [[`spec-ocas-suite-cross-skill-updates.md` ⚠️ Pending spec] ⚠️ Pending spec — not yet authored]):** Vesper polls the following intake directories during briefing generation and merges their briefs into the schedule / agenda sections:
-- **Sands → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (daily schedule briefs)
-- **Voyage → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (travel schedule briefs)
-- **Spot → Vesper intake** — `{agent_root}/commons/data/ocas-vesper/intake/` (appointment-confirmation briefs)
-- **Taste → Vesper** — recommendation highlights (read from `{agent_root}/commons/data/ocas-taste/recommendations/` or `intake/`), surfaced as a preference-aware Recommendations section.
-
-Consumed briefs are cleaned from the intake dir after merge (Vesper owns intake cleanup). If an intake source wrote no brief, omit that section gracefully — never fail the briefing.
-
-**Vesper → Dispatch:** Vesper writes completed briefings to its `briefings/` directory. Dispatch picks them up for delivery. See `references/schemas.md` VesperBriefingFile.
+See `references/inter-skill-interfaces.md` for the Custodian, Dispatch, Rally, and intake contracts.
 
 ## Storage layout & configuration
 
-Data lives under `{agent_root}/commons/data/ocas-vesper/` with journals under `{agent_root}/commons/journals/ocas-vesper/`. The default `config.json` sets morning window 07:00–09:00 PT, evening window 17:00–19:00 PT, all six sections enabled, 30-day retention, and 10k record cap. Briefings are stored in ISO week directories as `YYYY-MM-DD-{type}.json`. See `references/schemas.md` for the full directory tree and default config.
+Data under `{agent_root}/commons/data/ocas-vesper/`, journals under `{agent_root}/commons/journals/ocas-vesper/`. Default `config.json`: morning 07:00–09:00 PT, evening 17:00–19:00 PT, six sections, 30-day retention, 10k cap. Briefings in ISO week directories as `YYYY-MM-DD-{type}.json`. See `references/schemas.md`.
+
+**Minimal briefing file example (weather-only morning):**
+```json
+{"briefing_id":"vesper-morning-2026-11-03","type":"morning","date":"2026-11-03","week":"2026-W45","generated_at":"2026-11-03T06:00:00-08:00","content":"Good morning\n\n58°F right now, ☁️ overcast. Warming to 63°F by 10am. High of 74°F mid-afternoon, ☀️ sunny, 71°F at 4pm, dropping to a low of 55°F overnight.","sections":[],"delivery_status":"pending","delivered":false}
+```
 
 ## OKRs
 
-Vesper tracks five OKRs — signal precision, terminology compliance, decision framing, schedule adherence, and data integrity — all evaluated over 30-run windows. Targets: 85%+ actionable signals, 100% terminology-free briefings, 100% complete decision framing, 95%+ schedule compliance, 99%+ data integrity. See `references/okrs.md` for the full OKR specification.
+Five OKRs — signal precision, terminology compliance, decision framing, schedule adherence, data integrity — evaluated over 30-run windows. Targets: 85%+ actionable signals, 100% terminology-free briefings, 100% complete decision framing, 95%+ schedule compliance, 99%+ data integrity. See `references/okrs.md`.
 
 ## Optional skill cooperation
 
-- **Vibes** — applies voice identity and anti-AI rules from ocas-vibes. **Do NOT load ocas-vibes via skill_view** — its rules are already in SOUL.md and AGENTS.md. Apply voice rules directly from SOUL.md: no em dashes, no "the user" (use "you"), no meta-narration ("Now I have…", "Let me check…"), no rule of three, no Vibes checklist items that conflict with SOUL.md.
-- **Custodian** — reads InsightProposal files (cooperative read)
-- **Dispatch** — reads DispatchSummaryReport; Dispatch picks up completed briefings from Vesper for delivery
-- **Rally** — reads portfolio daily reports (cooperative read)
-- **Calendar/Weather** — reads external context for briefing content
-
+- Vibes — voice rules from SOUL.md/AGENTS.md (do not load ocas-vibes via skill_view; rules already embedded). No em dashes, no "the user" (use "you"), no meta-narration ("Now I have…", "Let me check…").
+- Custodian — reads InsightProposal files
+- Dispatch — reads DispatchSummaryReport; picks up completed briefings for delivery
+- Rally — reads portfolio daily reports
+- Calendar/Weather — reads external context for briefing content
 
 ## Ontology types & journal
 
-Vesper observes entities during briefing aggregation (Entity/Person, Concept/Event, Place). Entity observations are recorded in journal outputs for downstream Chronicle ingestion. Read `references/journal.md` before `vesper.journal`.
-
-When entities are encountered, include in `decision.payload`:
-- `entities_observed` — type, name, context
-- `relationships_observed` — connections between entities
-- `preferences_observed` — user preferences inferred from briefing interactions
-
-Each entity observation includes a `user_relevance` field: `user`, `agent_only`, or `unknown`.
+Vesper observes entities during aggregation (Entity/Person, Concept/Event, Place) and records `entities_observed`, `relationships_observed`, `preferences_observed`, plus `user_relevance` (`user`, `agent_only`, `unknown`) for Chronicle ingestion. Read `references/journal.md` before `vesper.journal`.
 
 ## Initialization
 
-On first invocation, run `vesper.init`:
+Run `vesper.init` on first invocation:
 - [ ] Create data directories (including `briefings/`)
 - [ ] Write default `config.json` if absent
 - [ ] Create empty JSONL files
 - [ ] Create journal directory
-- [ ] Register cron jobs `vesper:morning`, `vesper:evening`, `vesper:update` if not already present
+- [ ] Register cron jobs `vesper:morning`, `vesper:evening`, `vesper:update`
 - [ ] Log initialization as a DecisionRecord in `decisions.jsonl`
 
 ## Background tasks
 
-| Job name | Mechanism | Schedule | Command |
-|---|---|---|---|
-| `vesper:morning` | cron | `0 6 * * *` (daily 6am) | `vesper.briefing.morning` |
-| `vesper:evening` | cron | `0 20 * * *` (daily 8pm) | `vesper.briefing.evening` |
-| `vesper:update` | cron | `0 0 * * *` (midnight daily) | `vesper.update` |
-
-Cron options: `sessionTarget: isolated`, `lightContext: true`, `wakeMode: next-heartbeat`.
-
-Default times are 6am and 8pm PT. Override with `vesper.config.set morning_hour <H>` and `vesper.config.set evening_hour <H>`.
+| Job name | Schedule | Command |
+|---|---|---|
+| `vesper:morning` | `0 6 * * *` daily 6am PT | `vesper.briefing.morning` |
+| `vesper:evening` | `0 20 * * *` daily 8pm PT | `vesper.briefing.evening` |
+| `vesper:update` | `0 0 * * *` midnight PT | `vesper.update` |
 
 ## Disabling briefings
 
-Stopping briefing emails requires pausing BOTH generation and sending — pausing delivery alone does not work.
+Pause BOTH generation and sending — pausing delivery alone does not work.
 
-- **Sending:** `dispatch:briefing-deliver` — pause it (`enabled: false`, `state: paused`). This is the sender; while paused its own tick won't fire.
-- **Generation:** `vesper:morning`, `vesper:evening`, `touchpoint:agenda`, `touchpoint:midday`, `touchpoint:wrap` — pause each one. These keep creating briefing files even when the sender is paused.
+- **Sending:** pause `dispatch:briefing-deliver` (`enabled: false`, `state: paused`).
+- **Generation:** pause `vesper:morning`, `vesper:evening`, `touchpoint:agenda`, `touchpoint:midday`, `touchpoint:wrap`.
 
-Why: `dispatch:briefing-deliver` paused only stops its own tick. The generator jobs run independently and write today-dated briefings with real content. The delivery script (`briefing_deliver.py`) has no "disabled" gate — it sends any today-dated briefing past its earliest send time, including via an email fallback path that bypasses the paused dispatch job entirely. A briefing file marked `delivered: true` with channel `email` can exist even when `dispatch:briefing-deliver` is paused.
-
-To fully disable: pause all five generation jobs first, then confirm `dispatch:briefing-deliver` is paused. Generation creates nothing new; sending has nothing to pick up.
+Why: pausing `dispatch:briefing-deliver` stops at its own tick; generators keep writing today-dated briefings and the delivery script has no disabled gate — it sends any today-dated briefing past its earliest send time, including via the email fallback. Pause all five generation jobs first, then confirm the sender is paused.
 
 ## Self-update
 
-`vesper.update` pulls the latest package from the `source:` URL in SKILL.md frontmatter. Runs silently unless version changed or error occurred. On failure, retries once. Output on success: `I updated Vesper from version {old} to {new}`.
+`vesper.update` pulls the latest package from `source:` in this file's frontmatter. Silent unless version changed or error; retries once on failure. Success output: `I updated Vesper from version {old} to {new}`.
 
-**Procedure**: See `references/update-procedure.md` for the full update workflow including conflict resolution and profile sync. Key points:
-- If local modifications block `git pull`: stash, move conflicting untracked files, pull, stash pop, resolve conflicts
-- After pulling: sync the profile copy (`~/.hermes/profiles/indigo/skills/ocas-vesper/`) — sessions load from there, not the git repo
-
-## Visibility
-
-public
+Procedure: `references/update-procedure.md` — stash changes, pull, stash pop, resolve conflicts; then sync `~/.hermes/profiles/indigo/skills/ocas-vesper/` (sessions load from the profile copy).
 
 ## Gotchas
 
-Read `references/gotchas.md` for the full operational knowledge — account isolation, cron-mode constraints, delivery desyncs, MCP failures, weather API, tool quirks, and quality check pitfalls.
+Read `references/gotchas.md` for the full operational knowledge.
 
-Key rules live here; the reference file holds the details.
+## Error Handling
+
+| Failure | Symptom | Handling |
+|---|---|---|
+| Google Workspace MCP down | `Email ✗ not configured`, no `workspace-mcp` process | Set `delivery_status: {status:"failed", reason:"MCP server not running in cron session"}` on the individual file and `briefings.jsonl`; no retry loop — preserve content for the next run. See `references/mcp-server-diagnosis.md`. |
+| OAuth token expired | `invalid_grant` / `token expired` | Update `failed_at` + reason; report the blocker (browser reauth — impossible in cron mode). |
+| Partial JSONL write | `JSONDecodeError` on a ledger line | Repair surgically by matching `run_id` — never whole-file rewrite. See `references/jsonl-debug.md`. |
+| All upstream signals absent | Thin or weather-only briefing | Valid: write `sections: []`, mark `delivery_status: "silent"` if nothing actionable. See `references/sparse-briefings.md`. |
+| Cron double-fire | Duplicate briefing email | `scripts/dup_guard.py` exits 3 → skip regeneration and re-delivery. |
+| Flag desync | `delivered`/`delivery_status` disagree | Trust the timestamp; fix with `scripts/delivery_check.py`. See `references/delivery-check-procedure.md`. |
 
 ## Recovery behavior
 
-When Vesper encounters a partial failure, it follows the recovery protocol in `spec-ocas-recovery.md`:
+- **Partial signal loss:** journal, generate with available data, omit missing sections silently.
+- **Corrupted briefing file:** archive with `.corrupted.{timestamp}` suffix, regenerate.
+- **Interrupted run:** check `intents.jsonl` for incomplete entries, retry once, skip persistently failed entries.
+- **Upstream unavailability:** normal empty state — omit section.
 
-- **Partial signal loss**: Logs via journal, generates briefing with available data, omits missing sections silently.
-- **Corrupted briefing file**: Archives with `.corrupted.{timestamp}` suffix and regenerates.
-- **Interrupted run**: Checks `intents.jsonl` for incomplete entries, retries once, skips persistently failed entries.
-- **Upstream unavailability**: Treated as normal empty state — section omitted.
-
-All recovery actions logged to `evidence.jsonl`.
+Recovery actions logged to `evidence.jsonl`.
 
 ## Support File Map
 
 | File | When to read |
 |---|---|
+| `references/gotchas.md` | Before any operational work |
+| `references/interactive-menu.md` | When invoked interactively via `/` |
 | `references/account-credentials.md` | Before any Google OAuth operation |
-| `references/schemas.md` | Before creating briefings, sections, or decision requests; also contains storage layout and default config |
+| `references/schemas.md` | Before creating briefings/sections/decisions; storage layout + default config |
 | `references/briefing_templates.md` | Before generating briefing content |
-| `references/signal_filtering.md` | Before evaluating signals for inclusion |
-| `references/journal.md` | Before vesper.journal; at end of every run |
+| `references/signal_filtering.md` | Before evaluating signals |
+| `references/journal.md` | Before `vesper.journal`; end of every run |
 | `references/html-templates.md` | Before rendering briefing email HTML |
-| `references/weather-codes.md` | Before rendering the weather line (morning briefings) |
-| `references/weather-api.md` | Before fetching weather data — working Open-Meteo curl command and parameter reference |
-| `references/delivery-troubleshooting.md` | When a briefing is generated but not delivered |
-| `references/delivery-check-procedure.md` | During delivery check cron runs — checking briefings.jsonl for undelivered entries, fixing flag desyncs |
-| `references/mcp-server-diagnosis.md` | When the Google Workspace MCP server is unresponsive or absent — binary-chain diagnosis, failure modes, and fallback handling |
-| `references/okrs.md` | Before evaluating or reporting OKR metrics |
-| `references/update-procedure.md` | During `vesper.update` — conflict resolution and profile sync steps |
-| `references/cron-mode-operations.md` | During cron job execution — tool constraints (`execute_code` denied, `patch` unreliable on JSONL), briefing path conventions, JSONL write ordering |
-| `references/sparse-briefings.md` | When upstream signals are unavailable — how to produce useful thin briefings without padding. Covers weather-only briefings (empty `sections` array), evening sparse patterns, and "tomorrow-empty, day-after-has-events" pattern. |
-| `references/signal-gathering.md` | During signal fetching — parallel fetching reliability, subagent OAuth pitfall, thin briefing examples |
-| `references/cron-mode-briefing-generation.md` | During cron job execution — complete end-to-end workflow with pitfalls and solutions |
-| `references/jsonl-debug.md` | When briefings.jsonl has corrupted entries — diagnosis and repair of bracket mismatches |
-| `scripts/dup_guard.py` | **First thing in every generator run.** Exit 3 = today's briefing for this type already generated and delivered; skip generation and re-delivery. Guards against the cron double-fire that resets the delivered flag and emails a duplicate. |
-| `scripts/quality_check.py` | After generating a briefing file — automated validation. Run with absolute path: `python3 ~/.hermes/profiles/indigo/skills/ocas-vesper/scripts/quality_check.py <briefing.json>`. Returns `PASS` or `FAIL` with specific terms/sctions that need fixing. |
-| `references/delivery-channel.md` | **Before touching delivery** — briefings are EMAIL ONLY, never Telegram. Read the code, not the docstring. |
-| `scripts/delivery_check.py` | During delivery-check cron runs — scans individual files + `briefings.jsonl` for undelivered briefings (applies the dual delivery-flag/desync rules), and with `--deliver` sends by email, then updates both records with a surgical line edit (preserves corrupted sibling JSONL lines byte-for-byte). Run `python3 ~/.hermes/profiles/indigo/skills/ocas-vesper/scripts/delivery_check.py --type morning --deliver`. |
-
-## Support Files
-
-- `scripts/update.sh` — Wrapper to update ocas-vesper
+| `references/weather-codes.md` | Before rendering the weather line |
+| `references/weather-api.md` | Before fetching weather data (Open-Meteo curl command) |
+| `references/delivery-channel.md` | **Before touching delivery** — email only, never Telegram |
+| `references/delivery-check-procedure.md` | During delivery-check cron runs — undelivered entries, flag desyncs |
+| `references/mcp-server-diagnosis.md` | When the Google Workspace MCP server is down |
+| `references/okrs.md` | Before evaluating OKR metrics |
+| `references/update-procedure.md` | During `vesper.update` |
+| `references/cron-mode-operations.md` | During cron execution — tool constraints, paths |
+| `references/sparse-briefings.md` | When upstream signals are unavailable — thin briefings without padding |
+| `references/signal-gathering.md` | During signal fetching — parallel fetching, subagent OAuth pitfall |
+| `references/cron-mode-briefing-generation.md` | During cron execution — end-to-end workflow |
+| `references/jsonl-debug.md` | When `briefings.jsonl` has corrupted entries |
+| `references/run-completion.md` | **Before running a generator cron** |
+| `references/inter-skill-interfaces.md` | **Before reading or writing cross-skill data** |
+| `scripts/check_briefing.py` | Manual inspection of the latest briefing |
+| `scripts/dup_guard.py` | **First in every generator run** — exit 3 = already delivered today |
+| `scripts/quality_check.py` | After generating a briefing file — PASS/FAIL with terms to fix |
+| `scripts/delivery_check.py` | Delivery-check cron runs — scans + sends by email, updates both records |
 
 ## Tests
 
-`tests/test_smoke.py` covers:
-- `is_undelivered()` with boolean, string, and dict `delivery_status` variants
-- `has_content()` presence and emptiness checks
+`tests/test_smoke.py` — `is_undelivered()` (boolean/string/dict `delivery_status`) and `has_content()`.
 
-Run: `python3 -m unittest discover -s tests`
-
-CI via GitHub Actions (`.github/workflows/ci.yml`) runs the suite on every push to `main`.
+Run: `python3 -m unittest discover -s tests` (CI: `.github/workflows/ci.yml` on every push to `main`).

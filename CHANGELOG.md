@@ -1,5 +1,17 @@
 ## [2.10.0] - 2026-04-26
 
+## [2.16.0] - 2026-11-03
+
+### Changed
+- Extracted run-completion protocol into `references/run-completion.md`; SKILL.md carries a pointer under Run completion.
+- Extracted inter-skill interface contracts into `references/inter-skill-interfaces.md`; SKILL.md carries a pointer under Inter-skill interfaces.
+- Removed duplicated "What this skill does not do" section (already covered by description `NOT for` and When NOT to Use).
+- Shortened OKRs section to a pointer under `references/okrs.md`.
+- Removed redundant Support Files section; Support File Map now covers all scripts and references.
+- Fixed dead reference: `scripts/tests/test_opportunity_triage.py` → `tests/test_smoke.py`.
+- Added Support File Map rows for `delivery-channel.md`, `run-completion.md`, and `inter-skill-interfaces.md`.
+- SKILL.md reduced from ~6,300 to ~3,400 tokens (under the 3,500-token D3/D4 proxy); body under 500 lines retained. Invocation modes and cron-options detail folded into Background tasks / When to Use; standalone Visibility section dropped (public is the default).
+
 ## [2.15.0] - 2026-10-23
 
 ### Added
